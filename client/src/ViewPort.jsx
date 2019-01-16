@@ -27,6 +27,9 @@ class ViewPort extends Component {
       driver.data.start = driver.data.activeLegID[0];
       driver.data.end = driver.data.activeLegID[1];
       driver.data.legProgress = Number(driver.data.legProgress) * 0.01;
+      // interpolates the position of the driver
+      driver.data.x = parsedStops[driver.data.start].x + (parsedStops[driver.data.end].x - parsedStops[driver.data.start].x) * driver.data.legProgress;
+      driver.data.y = parsedStops[driver.data.start].y + (parsedStops[driver.data.end].y - parsedStops[driver.data.start].y) * driver.data.legProgress;
       // saves the parsed data into ViewPort state
       this.setState({
         legs: parsedLegs,
@@ -84,15 +87,12 @@ class ViewPort extends Component {
 
   // function to draw the driver
   drawDriver = () => {
-    // interpolates the position of the driver
-    let driverX = this.state.stops[this.state.driver.start].x + (this.state.stops[this.state.driver.end].x - this.state.stops[this.state.driver.start].x) * this.state.driver.legProgress;
-    let driverY = this.state.stops[this.state.driver.start].y + (this.state.stops[this.state.driver.end].y - this.state.stops[this.state.driver.start].y) * this.state.driver.legProgress;
     let length = 20;
     return (
       <Rect
         /* scaling the coordintes by x5 and shifting to center*/
-        x={driverX * 5 - length / 2}
-        y={driverY * 5 - length / 2}
+        x={this.state.driver.x * 5 - length / 2}
+        y={this.state.driver.y * 5 - length / 2}
         width={length}
         height={length}
         fill="blue"
@@ -110,24 +110,39 @@ class ViewPort extends Component {
         currentLeg = leg;
       }
     });
-    // using current leg, iterate to the root using DLL
-    return this.traceBackToStart(this.state.legs.find(currentLeg), []);
+    // initialize an array containing the completed lines
+    let lineArr = [];
+    // draw line from legStart to driver
+    let legStartX = this.state.stops[currentLeg.startStop].x * 5;
+    let legStartY = this.state.stops[currentLeg.startStop].y * 5;
+    let legEndX = this.state.driver.x * 5;
+    let legEndY = this.state.driver.y * 5;
+    lineArr.push(
+      <Line
+        key={currentLeg.legID}
+        x={0}
+        y={0}
+        points={[legStartX, legStartY, legEndX, legEndY]}
+        stroke="green"
+      />
+    )
+    // using currentLeg - 1, iterate to the root using DLL
+    let currentLegNode = this.state.legs.find(currentLeg);
+    return lineArr.concat(this.traceBackToStart(currentLegNode.prev, []));
   }
 
-  // recursive helper function to trace route back to beginning
+  // tail call recursive helper function to trace route back to beginning
   traceBackToStart = (currLeg, returnArr) => {
-    console.log(currLeg);
     // base case
     if (currLeg === null) {
       return returnArr;
     }
-
     // recursive case
     let legStartX = this.state.stops[currLeg.data.startStop].x * 5;
     let legStartY = this.state.stops[currLeg.data.startStop].y * 5;
     let legEndX = this.state.stops[currLeg.data.endStop].x * 5;
     let legEndY = this.state.stops[currLeg.data.endStop].y * 5;
-    console.log(legStartX, legStartY);
+    // creates a line connecting the stops of the current leg
     returnArr.push(
       <Line
         key={currLeg.data.legID}
