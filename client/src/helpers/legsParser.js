@@ -1,9 +1,10 @@
-// takes in an array of legs, and parses it into a hashmap
-module.exports = (legs) => {
-  let parsedLegs = {};
+const LinkedList = require('dbly-linked-list');
+
+// takes in an array of legs, and parses it into a doubly linked list
+module.exports = function legsParser(legs) {
+  let parsedLegs = new LinkedList();
   legs.forEach((leg) => {
-    parsedLegs[leg.legID] = leg;
-    parsedLegs[leg.legID].highlight = false;
+    parsedLegs.insert(leg);
   })
   return parsedLegs;
 }
