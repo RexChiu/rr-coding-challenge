@@ -87,7 +87,7 @@ class ViewPort extends Component {
 
   // function to draw the driver
   drawDriver = () => {
-    let length = 20;
+    let length = 15;
     return (
       <Rect
         /* scaling the coordintes by x5 and shifting to center*/
