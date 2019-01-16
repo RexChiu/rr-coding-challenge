@@ -25,6 +25,8 @@ class ViewPort extends Component {
       let parsedStops = stopsParser(stops.data);
       // retrieves the driver data
       let driver = await axios.get('/driver');
+      driver.data.start = parsedLegs[driver.data.activeLegID].startStop;
+      driver.data.end = parsedLegs[driver.data.activeLegID].endStop;
       // saves the parsed data into ViewPort state
       this.setState({
         legs: parsedLegs,
@@ -71,6 +73,7 @@ class ViewPort extends Component {
           width={10}
           height={10}
           fill="red"
+          key={stop.name}
         />
       )
     });
@@ -79,13 +82,9 @@ class ViewPort extends Component {
 
   // function to draw the driver
   drawDriver = () => {
-    // grabs the leg, stop, and coordinate info of the driver
-    let driverCurrentLeg = this.state.driver.activeLegID;
-    let driverStart = this.state.legs[driverCurrentLeg].startStop;
-    let driverEnd = this.state.legs[driverCurrentLeg].endStop;
     // interpolates the position of the driver
-    let driverX = this.state.stops[driverStart].x + (this.state.stops[driverEnd].x - this.state.stops[driverStart].x) * (Number(this.state.driver.legProgress) * 0.01);
-    let driverY = this.state.stops[driverStart].y + (this.state.stops[driverEnd].y - this.state.stops[driverStart].y) * (Number(this.state.driver.legProgress) * 0.01);
+    let driverX = this.state.stops[this.state.driver.start].x + (this.state.stops[this.state.driver.end].x - this.state.stops[this.state.driver.start].x) * (Number(this.state.driver.legProgress) * 0.01);
+    let driverY = this.state.stops[this.state.driver.start].y + (this.state.stops[this.state.driver.end].y - this.state.stops[this.state.driver.start].y) * (Number(this.state.driver.legProgress) * 0.01);
     return (
       <Rect
         /* scaling the coordintes by x5*/
@@ -97,6 +96,9 @@ class ViewPort extends Component {
       />
     )
   }
+
+  // function to draw the completed legs of the driver
+
 }
 
 export default ViewPort;
