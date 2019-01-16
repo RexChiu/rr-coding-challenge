@@ -6,6 +6,9 @@ module.exports = function makeDataHelpers(db) {
     },
     getStops() {
       return db.stops;
+    },
+    getDriver() {
+      return db.driver;
     }
   }
 }

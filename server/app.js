@@ -19,10 +19,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes handlers
 var legsRouter = require('./routes/legs')(DataHelper);
 var stopsRouter = require('./routes/stops')(DataHelper);
+var driverRouter = require('./routes/driver')(DataHelper);
 
 // routes
 app.use('/legs', legsRouter);
 app.use('/stops', stopsRouter);
+app.use('/driver', driverRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -37,7 +39,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('error');
 });
 
 module.exports = app;
