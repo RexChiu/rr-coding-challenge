@@ -1,10 +1,5 @@
-import React, { Fragment, Component } from 'react';
-import ReactLoading from 'react-loading';
-import axios from 'axios'
+import React, { Component } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
-
-import legsParser from './helpers/legsParser';
-import stopsParser from './helpers/stopsParser';
 
 class ViewPort extends Component {
   constructor(props) {
@@ -13,66 +8,30 @@ class ViewPort extends Component {
       loaded: false,
       windowHeight: window.innerHeight,
       windowWidth: window.innerWidth,
-      multiplier: 2.8,
-      offset: 0
+      multiplier: 2.8, // multiplier to increase the scale of the map
+      offset: 0 // used to push viewport to the middle
     };
   }
 
-  // Grabs legs, stops, and driver info once mounted
-  async componentDidMount() {
-    try {
-      // adds event listener to 
-      window.addEventListener('resize', this.updateWindow);
-      this.updateWindow();
-      // retrieves legs/stops data and parses array results into a suitable data structure
-      let legs = await axios.get('/legs');
-      let stops = await axios.get('/stops');
-      let parsedLegs = legsParser(legs.data); // parses into doubly linked list
-      let parsedStops = stopsParser(stops.data); //parses into hashmap
-      // retrieves the driver data, and adds any useful information
-      let driver = await axios.get('/driver');
-      driver.data.start = driver.data.activeLegID[0];
-      driver.data.end = driver.data.activeLegID[1];
-      driver.data.legProgress = Number(driver.data.legProgress) * 0.01;
-      // interpolates the position of the driver
-      driver.data.x = parsedStops[driver.data.start].x + (parsedStops[driver.data.end].x - parsedStops[driver.data.start].x) * driver.data.legProgress;
-      driver.data.y = parsedStops[driver.data.start].y + (parsedStops[driver.data.end].y - parsedStops[driver.data.start].y) * driver.data.legProgress;
-      // saves the parsed data into ViewPort state
-      this.setState({
-        rawLegs: legs,
-        rawStops: stops,
-        legs: parsedLegs,
-        stops: parsedStops,
-        driver: driver.data,
-        loaded: true
-      });
-    } catch (err) {
-      console.error(err);
-    }
+  componentDidMount() {
+    // adds event listener to catch resizing
+    window.addEventListener('resize', this.updateWindow);
+    this.updateWindow();
   }
 
   render() {
-    if (this.state.loaded) {
-      return (
-        <div className="App">
-          <Stage width={window.innerWidth} height={window.innerHeight}>
-            <Layer>
-              {this.drawBorder()}
-              {this.generateStops()}
-              {this.drawDriver()}
-              {this.drawCompletedLegs()}
-            </Layer>
-          </Stage>
-        </div>
-      );
-    } else {
-      return (
-        <Fragment>
-          <strong>Loading...</strong>
-          <ReactLoading className="loading-icon" type={'spinningBubbles'} color={'#000000'} height={'10%'} width={'10%'} />
-        </Fragment>
-      )
-    }
+    return (
+      <div className="App">
+        <Stage width={window.innerWidth} height={window.innerHeight}>
+          <Layer>
+            {this.drawBorder()}
+            {this.generateStops()}
+            {this.drawDriver()}
+            {this.drawCompletedLegs()}
+          </Layer>
+        </Stage>
+      </div>
+    );
   }
 
   // function to draw a black border around the grid
@@ -90,7 +49,7 @@ class ViewPort extends Component {
   // function to generates a rect for every stop
   generateStops = () => {
     let stopsArr = [];
-    Object.values(this.state.stops).forEach((stop) => {
+    Object.values(this.props.stops).forEach((stop) => {
       let length = 10;
       stopsArr.push(
         <Rect
@@ -113,8 +72,8 @@ class ViewPort extends Component {
     return (
       <Rect
         /* scaling the coordintes by x5 and shifting to center*/
-        x={this.state.offset + this.state.driver.x * this.state.multiplier - length / 2}
-        y={this.state.driver.y * this.state.multiplier - length / 2}
+        x={this.state.offset + this.props.driver.x * this.state.multiplier - length / 2}
+        y={this.props.driver.y * this.state.multiplier - length / 2}
         width={length}
         height={length}
         fill="blue"
@@ -125,20 +84,20 @@ class ViewPort extends Component {
   // function to draw the completed legs of the driver
   drawCompletedLegs = () => {
     // extracts arr of legs from DLL, and finds the current leg
-    let legsArr = this.state.legs.toArray();
+    let legsArr = this.props.legs.toArray();
     let currentLeg = null;
     legsArr.forEach((leg) => {
-      if (leg.legID === this.state.driver.activeLegID) {
+      if (leg.legID === this.props.driver.activeLegID) {
         currentLeg = leg;
       }
     });
     // initialize an array containing the completed lines
     let lineArr = [];
     // draw line from legStart to driver
-    let legStartX = this.state.offset + this.state.stops[currentLeg.startStop].x * this.state.multiplier;
-    let legStartY = this.state.stops[currentLeg.startStop].y * this.state.multiplier;
-    let legEndX = this.state.offset + this.state.driver.x * this.state.multiplier;
-    let legEndY = this.state.driver.y * this.state.multiplier;
+    let legStartX = this.state.offset + this.props.stops[currentLeg.startStop].x * this.state.multiplier;
+    let legStartY = this.props.stops[currentLeg.startStop].y * this.state.multiplier;
+    let legEndX = this.state.offset + this.props.driver.x * this.state.multiplier;
+    let legEndY = this.props.driver.y * this.state.multiplier;
     lineArr.push(
       <Line
         key={currentLeg.legID}
@@ -149,7 +108,7 @@ class ViewPort extends Component {
       />
     )
     // using currentLeg - 1, iterate to the root using DLL
-    let currentLegNode = this.state.legs.find(currentLeg);
+    let currentLegNode = this.props.legs.find(currentLeg);
     return lineArr.concat(this.traceBackToStart(currentLegNode.prev, []));
   }
 
@@ -160,10 +119,10 @@ class ViewPort extends Component {
       return returnArr;
     }
     // recursive case
-    let legStartX = this.state.stops[currLeg.data.startStop].x * this.state.multiplier;
-    let legStartY = this.state.stops[currLeg.data.startStop].y * this.state.multiplier;
-    let legEndX = this.state.stops[currLeg.data.endStop].x * this.state.multiplier;
-    let legEndY = this.state.stops[currLeg.data.endStop].y * this.state.multiplier;
+    let legStartX = this.props.stops[currLeg.data.startStop].x * this.state.multiplier;
+    let legStartY = this.props.stops[currLeg.data.startStop].y * this.state.multiplier;
+    let legEndX = this.props.stops[currLeg.data.endStop].x * this.state.multiplier;
+    let legEndY = this.props.stops[currLeg.data.endStop].y * this.state.multiplier;
     // creates a line connecting the stops of the current leg
     returnArr.push(
       <Line
