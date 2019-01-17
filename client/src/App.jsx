@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import ReactLoading from 'react-loading';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ViewPort from './ViewPort';
 import axios from 'axios'
@@ -9,8 +10,14 @@ import stopsParser from './helpers/stopsParser';
 class App extends Component {
   constructor(props) {
     super(props);
+    // initialized an empty driver object
+    let driver = {};
+    driver.activeLegID = "";
+    driver.legProgress = "";
     this.state = {
       loaded: false,
+      driver,
+      dropdownOpen: false
     }
   }
   // Grabs legs, stops, and driver info once mounted
@@ -31,8 +38,8 @@ class App extends Component {
       driver.data.y = parsedStops[driver.data.start].y + (parsedStops[driver.data.end].y - parsedStops[driver.data.start].y) * driver.data.legProgress;
       // saves the parsed data into state
       this.setState({
-        rawLegs: legs,
-        rawStops: stops,
+        rawLegs: legs.data,
+        rawStops: stops.data,
         legs: parsedLegs,
         stops: parsedStops,
         driver: driver.data,
@@ -59,7 +66,10 @@ class App extends Component {
   _renderViewPort = () => {
     if (this.state.loaded) {
       return (
-        <ViewPort rawLegs={this.state.rawLegs} rawStops={this.state.rawStops} legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} />
+        <Fragment>
+          {this._renderDropDownButton()}
+          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} />
+        </Fragment>
       );
     } else {
       // display loading icon if not loaded yet
@@ -71,8 +81,42 @@ class App extends Component {
       );
     }
   }
+
+  // function to render the dropdown button to display and select trip leg
+  _renderDropDownButton = () => {
+    const legTitle = this.state.driver.activeLegID;
+    let menuItemArr = [];
+    this.state.rawLegs.forEach((leg) => {
+      if (leg.legID === this.state.driver.activeLegID) {
+        menuItemArr.push(<DropdownItem key={leg.legID} active>{leg.legID}</DropdownItem>)
+      } else {
+        menuItemArr.push(<DropdownItem key={leg.legID}>{leg.legID}</DropdownItem>)
+      }
+    });
+    return (
+      <div className="container text-center">
+        <strong>
+          Legs:
+        </strong>
+        <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+          <DropdownToggle caret>
+            {legTitle}
+          </DropdownToggle>
+          <DropdownMenu>
+            {menuItemArr}
+          </DropdownMenu>
+        </ButtonDropdown>
+      </div>
+    )
+  }
+
+  // function to toggle the dropdown
+  toggle = () => {
+    let dropdownOpen = this.state.dropdownOpen === true ? false : true;
+    this.setState({
+      dropdownOpen
+    });
+  }
 }
-
-
 
 export default App;
