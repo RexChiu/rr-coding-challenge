@@ -138,13 +138,8 @@ class App extends Component {
     let payloadDriver = {};
     payloadDriver.activeLegID = this.state.driver.activeLegID;
     payloadDriver.legProgress = this.state.legProgress;
-    // uses axios to send a put request to update the driver, recalculates the returned driver info
-    let updatedDriver = await axios.put('/driver', payloadDriver);
-    let driver = this.calculateDriverInfo(updatedDriver.data, this.state.stops);
-    // updates the state to propagate down to redraw the viewport
-    this.setState({
-      driver
-    })
+    // sends payload to server
+    await this.sendPayloadDriver(payloadDriver);
   }
 
   // function to toggle the dropdown
@@ -161,7 +156,12 @@ class App extends Component {
     let payloadDriver = {};
     payloadDriver.activeLegID = event.target.innerText;
     payloadDriver.legProgress = this.state.legProgress;
+    // sends payload to server
+    await this.sendPayloadDriver(payloadDriver);
+  }
 
+  // function to send a payloadDriver and sets the response as the new state
+  sendPayloadDriver = async (payloadDriver) => {
     // uses axios to send a put request to update the driver, recalculates the returned driver info
     let updatedDriver = await axios.put('/driver', payloadDriver);
     let driver = this.calculateDriverInfo(updatedDriver.data, this.state.stops);
