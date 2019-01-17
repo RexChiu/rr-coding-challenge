@@ -113,13 +113,14 @@ class App extends Component {
   }
 
   // function to capture the selected dropdown
-  selectDropdown = (event) => {
-    let driver = this.state.driver;
-    driver.activeLegID = event.target.innerText;
-    driver = this.calculateDriverInfo(driver, this.state.stops);
+  selectDropdown = async (event) => {
+    let payloadDriver = {};
+    payloadDriver.activeLegID = event.target.innerText;
+    payloadDriver.legProgress = (this.state.driver.legProgress * 100).toString();
+    let updatedDriver = await axios.put('/driver', payloadDriver);
+    let driver = this.calculateDriverInfo(updatedDriver.data, this.state.stops);
     this.setState({
       driver,
-      dropdownOpen: !this.state.dropdownOpen
     })
   }
 
