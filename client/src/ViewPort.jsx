@@ -85,10 +85,9 @@ class ViewPort extends Component {
 
   // function to draw the completed legs of the driver
   drawCompletedLegs = () => {
-    // extracts arr of legs from DLL, and finds the current leg
-    let legsArr = this.props.legs.toArray();
+    // using array of the legs, finds the current leg
     let currentLeg = null;
-    legsArr.forEach((leg) => {
+    this.props.rawLegs.forEach((leg) => {
       if (leg.legID === this.props.driver.activeLegID) {
         currentLeg = leg;
       }

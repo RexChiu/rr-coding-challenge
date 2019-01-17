@@ -74,9 +74,12 @@ class App extends Component {
               <div className="mx-auto col-lg-3">
                 {this._renderTotalTripTime()}
               </div>
+              <div className="mx-auto col-lg-3">
+                {this._renderRemainingTripTime()}
+              </div>
             </div>
           </div>
-          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} />
+          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} />
         </Fragment>
       );
     } else {
@@ -137,6 +140,29 @@ class App extends Component {
       <div>
         <strong>Total Time: </strong>
         <p>{total}</p>
+      </div>
+    );
+  }
+
+  // function to render the remaining trip time
+  _renderRemainingTripTime = () => {
+    // finds the leg node of current driver
+    let currentLeg = null;
+    this.state.rawLegs.forEach((leg) => {
+      if (leg.legID === this.state.driver.activeLegID) {
+        currentLeg = leg;
+      }
+    });
+    let currentLegNode = this.state.legs.find(currentLeg);
+    // find the distance from current driver position to current endStop
+    let endStop = this.state.stops[currentLegNode.data.endStop];
+    let distanceDriverToNextStop = this.calculateDistance(this.state.driver.x, this.state.driver.y, endStop.x, endStop.y);
+    let timeNeededDriverToNextStop = distanceDriverToNextStop / currentLegNode.data.speedLimit;
+    let remainingTimeNeeded = this.calculateTripTimeToEnd(currentLegNode.next, timeNeededDriverToNextStop);
+    return (
+      <div>
+        <strong>Remaining Time: </strong>
+        <p>{remainingTimeNeeded}</p>
       </div>
     );
   }
