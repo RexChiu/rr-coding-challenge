@@ -107,7 +107,7 @@ class App extends Component {
     });
     return (
       <Fragment>
-        <Label for="dropdownToggle"><strong>Current Leg: </strong></Label>
+        <Label for="dropdownToggle"><strong>Current Leg</strong></Label>
         <ButtonDropdown id="dropdownToggle" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
           <DropdownToggle caret>
             {this.state.driver.activeLegID}
@@ -125,7 +125,7 @@ class App extends Component {
     return (
       <Form onSubmit={this.submitForm}>
         <FormGroup>
-          <Label for="legProgressForm"><strong>Leg Progress: </strong></Label>
+          <Label for="legProgressForm"><strong>Leg Progress</strong></Label>
           <Input className="text-center" type="text" name="text" id="legProgressForm" placeholder={this.state.legProgress + "%"} onChange={this.handleLegProgress} />
         </FormGroup>
       </Form>
@@ -138,7 +138,7 @@ class App extends Component {
     let total = this.calculateTripTimeToEnd(head, 0);
     return (
       <div>
-        <strong>Total Time: </strong>
+        <strong>Total Time</strong>
         <p>{total}</p>
       </div>
     );
@@ -161,7 +161,7 @@ class App extends Component {
     let remainingTimeNeeded = this.calculateTripTimeToEnd(currentLegNode.next, timeNeededDriverToNextStop);
     return (
       <div>
-        <strong>Remaining Time: </strong>
+        <strong>Remaining Time</strong>
         <p>{remainingTimeNeeded}</p>
       </div>
     );
