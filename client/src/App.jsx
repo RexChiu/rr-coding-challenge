@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import ReactLoading from 'react-loading';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Form, FormGroup, Input } from 'reactstrap';
 import './App.css';
 import ViewPort from './ViewPort';
 import axios from 'axios'
@@ -29,6 +29,7 @@ class App extends Component {
       let parsedStops = stopsParser(stops.data); //parses into hashmap
       // retrieves the driver data, and adds any useful information
       let driver = await axios.get('/driver');
+      let legProgress = driver.data.legProgress;
       driver = this.calculateDriverInfo(driver.data, parsedStops);
       // saves the parsed data into state
       this.setState({
@@ -37,6 +38,7 @@ class App extends Component {
         legs: parsedLegs,
         stops: parsedStops,
         driver,
+        legProgress,
         loaded: true
       });
     } catch (err) {
@@ -61,7 +63,16 @@ class App extends Component {
     if (this.state.loaded) {
       return (
         <Fragment>
-          {this._renderDropDownButton()}
+          <div className="d-flex justify-content-center align-items-center text-center container">
+            <div className="row">
+              <div className="mx-auto col-lg-4">
+                {this._renderDropDownButton()}
+              </div>
+              <div className="mx-auto col-lg-4">
+                {this._renderForm()}
+              </div>
+            </div>
+          </div>
           <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} />
         </Fragment>
       );
@@ -70,7 +81,7 @@ class App extends Component {
       return (
         <div className="loading container">
           <strong>Loading...</strong>
-          <ReactLoading className="m-auto" type={'spinningBubbles'} color={'#000000'} height={'10%'} width={'10%'} />
+          <ReactLoading className="mx-auto" type={'spinningBubbles'} color={'#000000'} height={'10%'} width={'10%'} />
         </div>
       );
     }
@@ -89,11 +100,9 @@ class App extends Component {
       }
     });
     return (
-      <div className="container text-center">
-        <strong>
-          Legs:
-        </strong>
-        <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+      <Fragment>
+        <Label for="dropdownToggle"><strong>Current Leg: </strong></Label>
+        <ButtonDropdown id="dropdownToggle" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
           <DropdownToggle caret>
             {this.state.driver.activeLegID}
           </DropdownToggle>
@@ -101,8 +110,35 @@ class App extends Component {
             {menuItemArr}
           </DropdownMenu>
         </ButtonDropdown>
-      </div>
+      </Fragment>
     )
+  }
+
+  // function to render the form to modify the legProgress
+  _renderForm = () => {
+    return (
+      <Form onSubmit={this.submitForm}>
+        <FormGroup>
+          <Label for="legProgressForm"><strong>Leg Progress: </strong></Label>
+          <Input className="text-center" type="text" name="text" id="legProgressForm" placeholder={this.state.legProgress + "%"} onChange={this.handleLegProgress} />
+        </FormGroup>
+      </Form>
+    );
+  }
+
+  // function to handle controlled inputs of legProgress
+  handleLegProgress = (event) => {
+    this.setState({ legProgress: event.target.value });
+  }
+
+  // function to handle form submission for legProgress
+  submitForm = (event) => {
+    event.preventDefault();
+    // reconstructs the db format for driver
+    let payloadDriver = {};
+    payloadDriver.activeLegID = this.state.driver.activeLegID;
+    payloadDriver.legProgress = this.state.legProgress;
+    console.log(payloadDriver);
   }
 
   // function to toggle the dropdown
@@ -118,7 +154,7 @@ class App extends Component {
     // reconstructs the db format for driver
     let payloadDriver = {};
     payloadDriver.activeLegID = event.target.innerText;
-    payloadDriver.legProgress = (this.state.driver.legProgress * 100).toString();
+    payloadDriver.legProgress = this.state.legProgress;
 
     // uses axios to send a put request to update the driver, recalculates the returned driver info
     let updatedDriver = await axios.put('/driver', payloadDriver);
