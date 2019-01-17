@@ -1,11 +1,15 @@
 import React, { Fragment, Component } from 'react';
 import ReactLoading from 'react-loading';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Form, FormGroup, Input } from 'reactstrap';
+import Slider, { createSliderWithTooltip } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import 'rc-tooltip/assets/bootstrap.css';
 import './App.css';
 import ViewPort from './ViewPort';
 import axios from 'axios'
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
+const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 class App extends Component {
   constructor(props) {
@@ -77,6 +81,11 @@ class App extends Component {
               <div className="mx-auto col-lg-3">
                 {this._renderRemainingTripTime()}
               </div>
+            </div>
+          </div>
+          <div className="d-flex justify-content-center align-items-center text-center container">
+            <div className="row">
+              {this._renderLegProgressSlider()}
             </div>
           </div>
           <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} />
@@ -167,6 +176,42 @@ class App extends Component {
     );
   }
 
+  // function to render a slider for legProgress
+  _renderLegProgressSlider = () => {
+    const style = { width: 300 };
+    return (
+      <div style={style}>
+        <SliderWithTooltip
+          tipFormatter={this.percentFormatter}
+          min={0}
+          max={100}
+          value={Number(this.state.legProgress)}
+          onChange={this.onSliderChange}
+          onAfterChange={this.onAfterChange}
+        />
+      </div>
+    )
+  }
+
+  // function to have a custom tooltip for slider
+  percentFormatter = (v) => {
+    return `${v}%`;
+  }
+
+  // function to handle slider changes
+  onSliderChange = (value) => {
+    this.setState({
+      legProgress: value.toString()
+    })
+  }
+
+  // function to capture the changes of the slider once it is stopped
+  onAfterChange = async (value) => {
+    let payloadDriver = this.makePayloadDriver();
+    // sends payload to server
+    await this.sendPayloadDriver(payloadDriver);
+  }
+
   // tail call recursive function to calculate the trip time from a given node to the end
   calculateTripTimeToEnd = (currLeg, tripTime) => {
     // base case
@@ -195,12 +240,18 @@ class App extends Component {
   // function to handle form submission for legProgress
   submitForm = async (event) => {
     event.preventDefault();
+    let payloadDriver = this.makePayloadDriver();
+    // sends payload to server
+    await this.sendPayloadDriver(payloadDriver);
+  }
+
+  // function to construct legProgress payload
+  makePayloadDriver = () => {
     // reconstructs the db format for driver
     let payloadDriver = {};
     payloadDriver.activeLegID = this.state.driver.activeLegID;
     payloadDriver.legProgress = this.state.legProgress;
-    // sends payload to server
-    await this.sendPayloadDriver(payloadDriver);
+    return payloadDriver;
   }
 
   // function to toggle the dropdown
