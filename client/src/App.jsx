@@ -112,15 +112,20 @@ class App extends Component {
     })
   }
 
-  // function to capture the selected dropdown
+  // function to capture the selected dropdown, send 
   selectDropdown = async (event) => {
+    // update the driver activeLegID based on selected dropdown
+    // reconstructs the db format for driver
     let payloadDriver = {};
     payloadDriver.activeLegID = event.target.innerText;
     payloadDriver.legProgress = (this.state.driver.legProgress * 100).toString();
+
+    // uses axios to send a put request to update the driver, recalculates the returned driver info
     let updatedDriver = await axios.put('/driver', payloadDriver);
     let driver = this.calculateDriverInfo(updatedDriver.data, this.state.stops);
+    // updates the state to propagate down to redraw the viewport
     this.setState({
-      driver,
+      driver
     })
   }
 
