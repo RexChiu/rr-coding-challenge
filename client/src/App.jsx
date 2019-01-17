@@ -65,11 +65,14 @@ class App extends Component {
         <Fragment>
           <div className="d-flex justify-content-center align-items-center text-center container">
             <div className="row">
-              <div className="mx-auto col-lg-4">
+              <div className="mx-auto col-lg-3">
                 {this._renderDropDownButton()}
               </div>
-              <div className="mx-auto col-lg-4">
+              <div className="mx-auto col-lg-3">
                 {this._renderForm()}
+              </div>
+              <div className="mx-auto col-lg-3">
+                {this._renderTotalTripTime()}
               </div>
             </div>
           </div>
@@ -124,6 +127,38 @@ class App extends Component {
         </FormGroup>
       </Form>
     );
+  }
+
+  // function to render the total trip time
+  _renderTotalTripTime = () => {
+    let head = this.state.legs.getHeadNode();
+    let total = this.calculateTripTimeToEnd(head, 0);
+    return (
+      <div>
+        <strong>Total Time: </strong>
+        <p>{total}</p>
+      </div>
+    );
+  }
+
+  // tail call recursive function to calculate the trip time from a given node to the end
+  calculateTripTimeToEnd = (currLeg, tripTime) => {
+    // base case
+    if (currLeg === null) {
+      return tripTime.toFixed(2) + " TUs";
+    }
+    // recursive case
+    // calculates the distance, divides the distance by the speed limit
+    let startStop = currLeg.data.startStop;
+    let endStop = currLeg.data.endStop;
+    let distance = this.calculateDistance(this.state.stops[startStop].x, this.state.stops[startStop].y, this.state.stops[endStop].x, this.state.stops[endStop].y);
+    let timeNeeded = distance / currLeg.data.speedLimit;
+    return this.calculateTripTimeToEnd(currLeg.next, tripTime + timeNeeded);
+  }
+
+  // function to calculate the distance between two points
+  calculateDistance = (x1, y1, x2, y2) => {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   }
 
   // function to handle controlled inputs of legProgress
