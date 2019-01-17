@@ -132,13 +132,19 @@ class App extends Component {
   }
 
   // function to handle form submission for legProgress
-  submitForm = (event) => {
+  submitForm = async (event) => {
     event.preventDefault();
     // reconstructs the db format for driver
     let payloadDriver = {};
     payloadDriver.activeLegID = this.state.driver.activeLegID;
     payloadDriver.legProgress = this.state.legProgress;
-    console.log(payloadDriver);
+    // uses axios to send a put request to update the driver, recalculates the returned driver info
+    let updatedDriver = await axios.put('/driver', payloadDriver);
+    let driver = this.calculateDriverInfo(updatedDriver.data, this.state.stops);
+    // updates the state to propagate down to redraw the viewport
+    this.setState({
+      driver
+    })
   }
 
   // function to toggle the dropdown
