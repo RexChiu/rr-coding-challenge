@@ -16,9 +16,7 @@ class App extends Component {
     driver.legProgress = "";
     this.state = {
       loaded: false,
-      driver,
       dropdownOpen: false,
-      selectedLeg: null
     }
   }
   // Grabs legs, stops, and driver info once mounted
