@@ -29,7 +29,7 @@ class App extends Component {
       // interpolates the position of the driver
       driver.data.x = parsedStops[driver.data.start].x + (parsedStops[driver.data.end].x - parsedStops[driver.data.start].x) * driver.data.legProgress;
       driver.data.y = parsedStops[driver.data.start].y + (parsedStops[driver.data.end].y - parsedStops[driver.data.start].y) * driver.data.legProgress;
-      // saves the parsed data into ViewPort state
+      // saves the parsed data into state
       this.setState({
         rawLegs: legs,
         rawStops: stops,
@@ -62,6 +62,7 @@ class App extends Component {
         <ViewPort rawLegs={this.state.rawLegs} rawStops={this.state.rawStops} legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} />
       );
     } else {
+      // display loading icon if not loaded yet
       return (
         <div className="loading container">
           <strong>Loading...</strong>

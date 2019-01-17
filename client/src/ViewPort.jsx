@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 
+
+// class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
   constructor(props) {
     super(props);
