@@ -107,6 +107,7 @@ class ViewPort extends Component {
         y={0}
         points={[legStartX, legStartY, legEndX, legEndY]}
         stroke="green"
+        strokeWidth={5}
       />
     )
     // using currentLeg - 1, iterate to the root using DLL
@@ -133,6 +134,7 @@ class ViewPort extends Component {
         y={0}
         points={[legStartX, legStartY, legEndX, legEndY]}
         stroke="green"
+        strokeWidth={5}
       />
     )
     return this.traceBackToStart(currLeg.prev, returnArr);
