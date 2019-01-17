@@ -9,6 +9,10 @@ module.exports = function makeDataHelpers(db) {
     },
     getDriver() {
       return db.driver;
+    },
+    setDriver(driver) {
+      db.driver = driver;
+      return db.driver;
     }
   }
 }
