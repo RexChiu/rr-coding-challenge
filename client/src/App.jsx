@@ -69,23 +69,23 @@ class App extends Component {
         <Fragment>
           <div className="d-flex justify-content-center align-items-center text-center container">
             <div className="row">
-              <div className="mx-auto col-lg-3">
+              <div className="mx-auto align-self-center col-lg-4">
                 {this._renderDropDownButton()}
               </div>
-              <div className="mx-auto col-lg-3">
-                {this._renderForm()}
-              </div>
-              <div className="mx-auto col-lg-3">
+
+              <div className="mx-auto align-self-center col-lg-3">
                 {this._renderTotalTripTime()}
               </div>
-              <div className="mx-auto col-lg-3">
+              <div className="mx-auto align-self-center col-lg-5">
                 {this._renderRemainingTripTime()}
               </div>
             </div>
           </div>
           <div className="d-flex justify-content-center align-items-center text-center container">
-            <div className="row">
-              {this._renderLegProgressSlider()}
+            <div className="row w-25 mb-1">
+              <div className="mx-auto align-self-center col-lg-12">
+                {this._renderLegProgressSlider()}
+              </div>
             </div>
           </div>
           <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} />
@@ -129,18 +129,6 @@ class App extends Component {
     )
   }
 
-  // function to render the form to modify the legProgress
-  _renderForm = () => {
-    return (
-      <Form onSubmit={this.submitForm}>
-        <FormGroup>
-          <Label for="legProgressForm"><strong>Leg Progress</strong></Label>
-          <Input className="text-center" type="text" name="text" id="legProgressForm" placeholder={this.state.legProgress + "%"} onChange={this.handleLegProgress} />
-        </FormGroup>
-      </Form>
-    );
-  }
-
   // function to render the total trip time
   _renderTotalTripTime = () => {
     let head = this.state.legs.getHeadNode();
@@ -178,10 +166,10 @@ class App extends Component {
 
   // function to render a slider for legProgress
   _renderLegProgressSlider = () => {
-    const style = { width: 300 };
     return (
-      <div style={style}>
-        <SliderWithTooltip
+      <div>
+        <strong>Leg Progress</strong>
+        <SliderWithTooltip className="w-100"
           tipFormatter={this.percentFormatter}
           min={0}
           max={100}
@@ -235,14 +223,6 @@ class App extends Component {
   // function to handle controlled inputs of legProgress
   handleLegProgress = (event) => {
     this.setState({ legProgress: event.target.value });
-  }
-
-  // function to handle form submission for legProgress
-  submitForm = async (event) => {
-    event.preventDefault();
-    let payloadDriver = this.makePayloadDriver();
-    // sends payload to server
-    await this.sendPayloadDriver(payloadDriver);
   }
 
   // function to construct legProgress payload

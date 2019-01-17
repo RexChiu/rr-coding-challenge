@@ -10,7 +10,7 @@ class ViewPort extends Component {
       loaded: false,
       windowHeight: window.innerHeight,
       windowWidth: window.innerWidth,
-      multiplier: 2.8, // multiplier to increase the scale of the map
+      multiplier: 2.5, // multiplier to increase the scale of the map
       offset: 0 // used to push viewport to the middle
     };
   }
@@ -24,7 +24,7 @@ class ViewPort extends Component {
   render() {
     return (
       <div className="App">
-        <Stage width={window.innerWidth} height={window.innerHeight * .8}>
+        <Stage width={window.innerWidth} height={window.innerHeight * .7}>
           <Layer>
             {this.drawBorder()}
             {this.generateStops()}
