@@ -24,7 +24,7 @@ class ViewPort extends Component {
   render() {
     return (
       <div className="App">
-        <Stage width={window.innerWidth} height={window.innerHeight}>
+        <Stage width={window.innerWidth} height={window.innerHeight * .8}>
           <Layer>
             {this.drawBorder()}
             {this.generateStops()}
