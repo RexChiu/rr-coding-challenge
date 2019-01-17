@@ -17,7 +17,8 @@ class App extends Component {
     this.state = {
       loaded: false,
       driver,
-      dropdownOpen: false
+      dropdownOpen: false,
+      selectedLeg: null
     }
   }
   // Grabs legs, stops, and driver info once mounted
@@ -30,19 +31,14 @@ class App extends Component {
       let parsedStops = stopsParser(stops.data); //parses into hashmap
       // retrieves the driver data, and adds any useful information
       let driver = await axios.get('/driver');
-      driver.data.start = driver.data.activeLegID[0];
-      driver.data.end = driver.data.activeLegID[1];
-      driver.data.legProgress = Number(driver.data.legProgress) * 0.01;
-      // interpolates the position of the driver
-      driver.data.x = parsedStops[driver.data.start].x + (parsedStops[driver.data.end].x - parsedStops[driver.data.start].x) * driver.data.legProgress;
-      driver.data.y = parsedStops[driver.data.start].y + (parsedStops[driver.data.end].y - parsedStops[driver.data.start].y) * driver.data.legProgress;
+      driver = this.calculateDriverInfo(driver.data, parsedStops);
       // saves the parsed data into state
       this.setState({
         rawLegs: legs.data,
         rawStops: stops.data,
         legs: parsedLegs,
         stops: parsedStops,
-        driver: driver.data,
+        driver,
         loaded: true
       });
     } catch (err) {
@@ -84,13 +80,14 @@ class App extends Component {
 
   // function to render the dropdown button to display and select trip leg
   _renderDropDownButton = () => {
-    const legTitle = this.state.driver.activeLegID;
+    // iterates through each leg and grabs the legID to populate drop down
     let menuItemArr = [];
     this.state.rawLegs.forEach((leg) => {
+      // sets active flag on current leg
       if (leg.legID === this.state.driver.activeLegID) {
-        menuItemArr.push(<DropdownItem key={leg.legID} active>{leg.legID}</DropdownItem>)
+        menuItemArr.push(<DropdownItem key={leg.legID} disabled={true}>{leg.legID}</DropdownItem>)
       } else {
-        menuItemArr.push(<DropdownItem key={leg.legID}>{leg.legID}</DropdownItem>)
+        menuItemArr.push(<DropdownItem onClick={this.selectDropdown} key={leg.legID}>{leg.legID}</DropdownItem>)
       }
     });
     return (
@@ -98,9 +95,9 @@ class App extends Component {
         <strong>
           Legs:
         </strong>
-        <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+        <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
           <DropdownToggle caret>
-            {legTitle}
+            {this.state.driver.activeLegID}
           </DropdownToggle>
           <DropdownMenu>
             {menuItemArr}
@@ -111,11 +108,39 @@ class App extends Component {
   }
 
   // function to toggle the dropdown
-  toggle = () => {
-    let dropdownOpen = this.state.dropdownOpen === true ? false : true;
+  toggleDropdown = () => {
     this.setState({
-      dropdownOpen
-    });
+      dropdownOpen: !this.state.dropdownOpen
+    })
+  }
+
+  // function to capture the selected dropdown
+  selectDropdown = (event) => {
+    let driver = this.state.driver;
+    driver.activeLegID = event.target.innerText;
+    driver = this.calculateDriverInfo(driver, this.state.stops);
+    this.setState({
+      driver,
+      dropdownOpen: !this.state.dropdownOpen
+    })
+  }
+
+  // function to calculate the driver info
+  calculateDriverInfo = (driver, parsedStops) => {
+    let updatedDriver = {};
+    updatedDriver.activeLegID = driver.activeLegID;
+    updatedDriver.start = driver.activeLegID[0];
+    updatedDriver.end = driver.activeLegID[1];
+    // parses legProgress into a number if it isnt one
+    if (typeof driver.legProgress == 'number') {
+      updatedDriver.legProgress = driver.legProgress;
+    } else {
+      updatedDriver.legProgress = Number(driver.legProgress) * 0.01;
+    }
+    // interpolates the position of the driver
+    updatedDriver.x = parsedStops[updatedDriver.start].x + (parsedStops[updatedDriver.end].x - parsedStops[updatedDriver.start].x) * updatedDriver.legProgress;
+    updatedDriver.y = parsedStops[updatedDriver.start].y + (parsedStops[updatedDriver.end].y - parsedStops[updatedDriver.start].y) * updatedDriver.legProgress;
+    return updatedDriver;
   }
 }
 
