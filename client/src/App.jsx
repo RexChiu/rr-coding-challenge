@@ -259,7 +259,8 @@ class App extends Component {
     let driver = this.calculateDriverInfo(updatedDriver.data, this.state.stops);
     // updates the state to propagate down to redraw the viewport
     this.setState({
-      driver
+      driver,
+      legProgress: updatedDriver.data.legProgress
     })
   }
 
