@@ -17,6 +17,24 @@ module.exports = function makeDataHelpers(db) {
     setDriver(driver) {
       db.driver = driver;
       return db.driver;
+    },
+    // function to find the legID of a given startStop
+    findLegIDwithStartStop(startStop) {
+      for (let leg of db.legs) {
+        if (leg.startStop == startStop) {
+          return leg.legID;
+        }
+      };
+      return Promise.reject("Cannot find start stop");
+    },
+    // function to find the legID of a given endStop
+    findLegIDwithEndStop(endStop) {
+      for (let leg of db.legs) {
+        if (leg.endStop == endStop) {
+          return leg.legID;
+        }
+      };
+      return Promise.reject("Cannot find end stop");
     }
   }
 }
