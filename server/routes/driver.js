@@ -19,13 +19,13 @@ module.exports = (db) => {
       if (req.body.legProgress == 0) {
         let currStartStop = req.body.activeLegID[0];
         req.body.activeLegID = await db.findLegIDwithEndStop(currStartStop);
-        req.body.legProgress = "100";
+        req.body.legProgress = "99.99";
       }
       // logic to catch 100, shifts driver up a leg
       else if (req.body.legProgress == 100) {
         let currEndStop = req.body.activeLegID[1];
         req.body.activeLegID = await db.findLegIDwithStartStop(currEndStop);
-        req.body.legProgress = "0";
+        req.body.legProgress = "0.01";
       }
     }
     catch (err) {

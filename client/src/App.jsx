@@ -73,10 +73,10 @@ class App extends Component {
                 {this._renderDropDownButton()}
               </div>
 
-              <div className="mx-auto align-self-center col-lg-3">
+              <div className="mx-auto align-self-center col-lg-4">
                 {this._renderTotalTripTime()}
               </div>
-              <div className="mx-auto align-self-center col-lg-5">
+              <div className="mx-auto align-self-center col-lg-4">
                 {this._renderRemainingTripTime()}
               </div>
             </div>
