@@ -140,6 +140,24 @@ class App extends Component {
     )
   }
 
+  // function to toggle the dropdown
+  toggleDropdown = () => {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    })
+  }
+
+  // function to capture the selected dropdown, send 
+  selectDropdown = async (event) => {
+    // update the driver activeLegID based on selected dropdown
+    // reconstructs the db format for driver
+    let payloadDriver = {};
+    payloadDriver.activeLegID = event.target.innerText;
+    payloadDriver.legProgress = this.state.legProgress;
+    // sends payload to server
+    await this.sendPayloadDriver(payloadDriver);
+  }
+
   // function to render the total trip time
   _renderTotalTripTime = () => {
     let head = this.state.legs.getHeadNode();
@@ -175,6 +193,21 @@ class App extends Component {
     );
   }
 
+  // tail call recursive function to calculate the trip time from a given node to the end
+  calculateTripTimeToEnd = (currLeg, tripTime) => {
+    // base case
+    if (currLeg === null) {
+      return tripTime.toFixed(2) + " TUs";
+    }
+    // recursive case
+    // calculates the distance, divides the distance by the speed limit
+    let startStop = currLeg.data.startStop;
+    let endStop = currLeg.data.endStop;
+    let distance = helper.calculateDistance(this.state.stops[startStop].x, this.state.stops[startStop].y, this.state.stops[endStop].x, this.state.stops[endStop].y);
+    let timeNeeded = distance / currLeg.data.speedLimit;
+    return this.calculateTripTimeToEnd(currLeg.next, tripTime + timeNeeded);
+  }
+
   // function to render the form for the bonus driver
   _renderBonusDriverForm = () => {
     return (
@@ -192,23 +225,6 @@ class App extends Component {
             </div>
           </FormGroup>
         </Form>
-      </div>
-    )
-  }
-
-  // function to render a slider for legProgress
-  _renderLegProgressSlider = () => {
-    return (
-      <div>
-        <strong>Leg Progress</strong>
-        <SliderWithTooltip className="w-100 mt-1"
-          tipFormatter={this.percentFormatter}
-          min={0}
-          max={100}
-          value={Number(this.state.legProgress)}
-          onChange={this.onSliderChange}
-          onAfterChange={this.onAfterChange}
-        />
       </div>
     )
   }
@@ -249,6 +265,23 @@ class App extends Component {
     }
   }
 
+  // function to render a slider for legProgress
+  _renderLegProgressSlider = () => {
+    return (
+      <div>
+        <strong>Leg Progress</strong>
+        <SliderWithTooltip className="w-100 mt-1"
+          tipFormatter={this.percentFormatter}
+          min={0}
+          max={100}
+          value={Number(this.state.legProgress)}
+          onChange={this.onSliderChange}
+          onAfterChange={this.onAfterChange}
+        />
+      </div>
+    )
+  }
+
   // function to have a custom tooltip for slider
   percentFormatter = (v) => {
     return `${v}%`;
@@ -271,21 +304,6 @@ class App extends Component {
     await this.sendPayloadDriver(payloadDriver);
   }
 
-  // tail call recursive function to calculate the trip time from a given node to the end
-  calculateTripTimeToEnd = (currLeg, tripTime) => {
-    // base case
-    if (currLeg === null) {
-      return tripTime.toFixed(2) + " TUs";
-    }
-    // recursive case
-    // calculates the distance, divides the distance by the speed limit
-    let startStop = currLeg.data.startStop;
-    let endStop = currLeg.data.endStop;
-    let distance = helper.calculateDistance(this.state.stops[startStop].x, this.state.stops[startStop].y, this.state.stops[endStop].x, this.state.stops[endStop].y);
-    let timeNeeded = distance / currLeg.data.speedLimit;
-    return this.calculateTripTimeToEnd(currLeg.next, tripTime + timeNeeded);
-  }
-
   // function to construct legProgress payload
   makePayloadDriver = () => {
     // reconstructs the db format for driver
@@ -293,24 +311,6 @@ class App extends Component {
     payloadDriver.activeLegID = this.state.driver.activeLegID;
     payloadDriver.legProgress = this.state.legProgress;
     return payloadDriver;
-  }
-
-  // function to toggle the dropdown
-  toggleDropdown = () => {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    })
-  }
-
-  // function to capture the selected dropdown, send 
-  selectDropdown = async (event) => {
-    // update the driver activeLegID based on selected dropdown
-    // reconstructs the db format for driver
-    let payloadDriver = {};
-    payloadDriver.activeLegID = event.target.innerText;
-    payloadDriver.legProgress = this.state.legProgress;
-    // sends payload to server
-    await this.sendPayloadDriver(payloadDriver);
   }
 
   // function to send a payloadDriver and sets the response as the new state
