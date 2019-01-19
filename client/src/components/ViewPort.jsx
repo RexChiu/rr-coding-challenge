@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import { Stage, Layer } from 'react-konva';
 
 import Border from './Border';
@@ -37,12 +37,25 @@ class ViewPort extends Component {
             <Driver driver={this.props.driver} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegs currentLeg={currentLeg} legs={this.props.legs} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegToDriver currentLeg={currentLeg} driver={this.props.driver} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
-            <BonusDriver bonusDriver={this.props.bonusDriver} multiplier={this.state.multiplier} offset={this.state.offset} />
-            <BonusDriverToEnd bonusDriver={this.props.bonusDriver} legs={this.props.legs} rawLegs={this.props.rawLegs} stops={this.props.stops} rawStops={this.props.rawStops} multiplier={this.state.multiplier} offset={this.state.offset} />
+            {this._renderBonusDriver()}
           </Layer>
         </Stage>
       </div>
     );
+  }
+
+  // renders bonus driver only if showBonusDriver is true
+  _renderBonusDriver = () => {
+    if (this.props.showBonusDriver) {
+      return (
+        <Fragment>
+          <BonusDriver bonusDriver={this.props.bonusDriver} multiplier={this.state.multiplier} offset={this.state.offset} />
+          <BonusDriverToEnd bonusDriver={this.props.bonusDriver} legs={this.props.legs} rawLegs={this.props.rawLegs} stops={this.props.stops} rawStops={this.props.rawStops} multiplier={this.state.multiplier} offset={this.state.offset} />
+        </Fragment>
+      )
+    } else {
+      return (null);
+    }
   }
 
   // function to get the current dimensions of the window

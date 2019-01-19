@@ -17,14 +17,10 @@ const SliderWithTooltip = createSliderWithTooltip(Slider);
 class App extends Component {
   constructor(props) {
     super(props);
-    // initialized an empty bonusDriver object
-    let bonusDriver = {};
-    bonusDriver.x = "";
-    bonusDriver.y = "";
     this.state = {
       loaded: false,
       dropdownOpen: false,
-      bonusDriver
+      showBonusDriver: true
     }
   }
   // Grabs legs, stops, and driver info once mounted
@@ -97,7 +93,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} rawStops={this.state.rawStops} bonusDriver={this.state.bonusDriver} />
+          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} rawStops={this.state.rawStops} bonusDriver={this.state.bonusDriver} showBonusDriver={this.state.showBonusDriver} />
         </Fragment>
       );
     } else {
@@ -221,7 +217,7 @@ class App extends Component {
             </div>
             <div className="col-lg-6 px-2 my-auto">
               <Button onClick={this.submitBonusDriver}>Submit</Button>
-              <Button onClick={this.resetBonusDriver}>Reset</Button>
+              <Button onClick={this.toggleBonusDriver}>{this.state.showBonusDriver ? "Hide" : "Show"}</Button>
             </div>
           </FormGroup>
         </Form>
@@ -263,6 +259,12 @@ class App extends Component {
     } else {
       alert("Bonus Driver coords must be between 0 and 200");
     }
+  }
+  // function to toggle the bonus driver
+  toggleBonusDriver = () => {
+    this.setState({
+      showBonusDriver: !this.state.showBonusDriver
+    })
   }
 
   // function to render a slider for legProgress
