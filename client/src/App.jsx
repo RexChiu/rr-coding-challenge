@@ -168,19 +168,20 @@ class App extends Component {
     );
   }
 
-  // function to tender the form for the bonus driver
+  // function to render the form for the bonus driver
   _renderBonusDriverForm = () => {
     return (
       <div>
         <strong>Bonus Driver</strong>
-        <Form className="container">
+        <Form className="d-flex justify-content-center align-items-center text-center">
           <FormGroup className="row my-0">
             <div className="col-lg-6 px-0">
-              <Input className="text-center" type="text" name="x" id="bonusDriverX" placeholder="X" />
-              <Input className="text-center" type="text" name="y" id="bonusDriverY" placeholder="Y" />
+              <Input className="text-center" type="text" name="x" id="bonusDriverX" placeholder={this.state.bonusDriverX ? this.state.bonusDriverX : "X"} onChange={this.changeBonusDriverX} />
+              <Input className="text-center" type="text" name="y" id="bonusDriverY" placeholder={this.state.bonusDriverY ? this.state.bonusDriverX : "Y"} onChange={this.changeBonusDriverY} />
             </div>
             <div className="col-lg-6 px-2 my-auto">
-              <Button>Submit</Button>
+              <Button onClick={this.submitBonusDriver}>Submit</Button>
+              <Button onClick={this.resetBonusDriver}>Reset</Button>
             </div>
           </FormGroup>
         </Form>
@@ -203,6 +204,33 @@ class App extends Component {
         />
       </div>
     )
+  }
+
+  // controlled inputs for Bonus Driver X
+  changeBonusDriverX = (event) => {
+    this.setState({
+      bonusDriverX: Number(event.target.value)
+    })
+  }
+  // controlled inputs for Bonus Driver X
+  changeBonusDriverY = (event) => {
+    this.setState({
+      bonusDriverY: Number(event.target.value)
+    })
+  }
+  // submit bonus driver to server
+  submitBonusDriver = async (event) => {
+    // stops default form action
+    event.preventDefault();
+    // constructs and sends payload of bonusDriver
+    let payloadBonusDriver = {
+      bonusDriverX: this.state.bonusDriverX,
+      bonusDriverY: this.state.bonusDriverY
+    }
+    let bonusDriver = await axios.put('/driver', payloadBonusDriver);
+    this.setState({
+      bonusDriver
+    })
   }
 
   // function to have a custom tooltip for slider
@@ -245,11 +273,6 @@ class App extends Component {
   // function to calculate the distance between two points
   calculateDistance = (x1, y1, x2, y2) => {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-  }
-
-  // function to handle controlled inputs of legProgress
-  handleLegProgress = (event) => {
-    this.setState({ legProgress: event.target.value });
   }
 
   // function to construct legProgress payload
