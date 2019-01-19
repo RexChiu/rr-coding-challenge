@@ -97,7 +97,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} bonusDriver={this.state.bonusDriver} />
+          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} rawStops={this.state.rawStops} bonusDriver={this.state.bonusDriver} />
         </Fragment>
       );
     } else {

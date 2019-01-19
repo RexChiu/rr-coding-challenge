@@ -38,7 +38,7 @@ class ViewPort extends Component {
             <CompletedLegs currentLeg={currentLeg} legs={this.props.legs} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegToDriver currentLeg={currentLeg} driver={this.props.driver} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <BonusDriver bonusDriver={this.props.bonusDriver} multiplier={this.state.multiplier} offset={this.state.offset} />
-            <BonusDriverToClosestStop bonusDriver={this.props.bonusDriver} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
+            <BonusDriverToClosestStop bonusDriver={this.props.bonusDriver} rawStops={this.props.rawStops} multiplier={this.state.multiplier} offset={this.state.offset} />
           </Layer>
         </Stage>
       </div>
