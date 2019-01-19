@@ -30,7 +30,8 @@ module.exports = (db) => {
     }
     catch (err) {
       // catches cases of not being able to find start/end stops
-      // do nothing to driver
+      // shifts driver a little to not trigger legProgress 0/100 again
+      req.body.legProgress = req.body.legProgress == 0 ? "0.01" : "99.99";
     }
     // try/catch to handle db errors
     try {
