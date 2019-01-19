@@ -2,7 +2,11 @@
 
 Technical Test by Rose Rocket to create a Driver Location App
 
-Built Using: React, NodeJS Express
+Built Using: React, React Konvas (Canvas), NodeJS Express
+
+!["Screenshot of home page"](https://github.com/RexChiu/rr-coding-challenge/blob/master/docs/main-page.PNG)
+!["Screenshot of hidden bonus driver"](https://github.com/RexChiu/rr-coding-challenge/blob/master/docs/hidden-bonus-driver.PNG)
+!["Screenshot of dynamic stuff"](https://github.com/RexChiu/rr-coding-challenge/blob/master/docs/dynamic-remaining-time.PNG)
 
 Features:
   - Current Leg modification via Dropdown
