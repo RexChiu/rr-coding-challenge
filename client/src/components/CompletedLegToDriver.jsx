@@ -2,7 +2,7 @@ import React from 'react';
 import { Line } from 'react-konva';
 
 // function to draw the line from the last completed leg to driver
-function drawCompletedLegToDriver(props) {
+function CompletedLegToDriver(props) {
   let currentLeg = props.currentLeg;
   // draw line from legStart to driver
   let legStartX = props.offset + props.stops[currentLeg.startStop].x * props.multiplier;
@@ -21,4 +21,4 @@ function drawCompletedLegToDriver(props) {
   )
 }
 
-export default drawCompletedLegToDriver;
+export default CompletedLegToDriver;
