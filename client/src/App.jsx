@@ -169,7 +169,7 @@ class App extends Component {
     return (
       <div>
         <strong>Leg Progress</strong>
-        <SliderWithTooltip className="w-100"
+        <SliderWithTooltip className="w-100 mt-1"
           tipFormatter={this.percentFormatter}
           min={0}
           max={100}
