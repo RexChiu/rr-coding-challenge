@@ -5,7 +5,7 @@ import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './App.css';
-import ViewPort from './ViewPort';
+import ViewPort from './components/ViewPort';
 import axios from 'axios'
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';

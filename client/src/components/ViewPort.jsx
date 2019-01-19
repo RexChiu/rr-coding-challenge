@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 
+import Border from './Border';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -26,7 +27,7 @@ class ViewPort extends Component {
       <div className="App">
         <Stage width={window.innerWidth} height={window.innerHeight * .7}>
           <Layer>
-            {this.drawBorder()}
+            <Border multiplier={this.state.multiplier} offset={this.state.offset} />
             {this.generateStops()}
             {this.drawDriver()}
             {this.drawCompletedLegs()}
@@ -37,17 +38,7 @@ class ViewPort extends Component {
     );
   }
 
-  // function to draw a black border around the grid
-  drawBorder = () => {
-    return (<Line
-      key="BorderCats"
-      x={this.state.offset}
-      y={0}
-      points={[0, 0, 200 * this.state.multiplier, 0, 200 * this.state.multiplier, 200 * this.state.multiplier, 0, 200 * this.state.multiplier]}
-      stroke="black"
-      closed
-    />);
-  }
+
 
   // function to generates a rect for every stop
   generateStops = () => {
