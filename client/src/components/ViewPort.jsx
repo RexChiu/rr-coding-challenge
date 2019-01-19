@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Stage, Layer, Line } from 'react-konva';
+import { Stage, Layer } from 'react-konva';
 
 import Border from './Border';
 import Stops from './Stops';
 import Driver from './Driver';
 import CompletedLegs from './CompletedLegs';
+import CompletedLegToDriver from './CompletedLegToDriver';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -35,32 +36,11 @@ class ViewPort extends Component {
             <Stops stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <Driver driver={this.props.driver} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegs currentLeg={currentLeg} legs={this.props.legs} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
-            {/* {this.drawCompletedLegs()} */}
-            {this.drawCompletedLegToDriver()}
+            <CompletedLegToDriver currentLeg={currentLeg} driver={this.props.driver} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
           </Layer>
         </Stage>
       </div>
     );
-  }
-
-  // function to draw the line from the last completed leg to driver
-  drawCompletedLegToDriver = () => {
-    let currentLeg = this.findCurrentLeg();
-    // draw line from legStart to driver
-    let legStartX = this.state.offset + this.props.stops[currentLeg.startStop].x * this.state.multiplier;
-    let legStartY = this.props.stops[currentLeg.startStop].y * this.state.multiplier;
-    let legEndX = this.state.offset + this.props.driver.x * this.state.multiplier;
-    let legEndY = this.props.driver.y * this.state.multiplier;
-    return (
-      <Line
-        key={currentLeg.legID}
-        x={0}
-        y={0}
-        points={[legStartX, legStartY, legEndX, legEndY]}
-        stroke="green"
-        strokeWidth={5}
-      />
-    )
   }
 
   // function to get the current dimensions of the window
