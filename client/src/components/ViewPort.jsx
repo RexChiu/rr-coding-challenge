@@ -3,6 +3,7 @@ import { Stage, Layer, Rect, Line } from 'react-konva';
 
 import Border from './Border';
 import Stops from './Stops';
+import Driver from './Driver';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -30,28 +31,13 @@ class ViewPort extends Component {
           <Layer>
             <Border multiplier={this.state.multiplier} offset={this.state.offset} />
             <Stops stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
-            {this.drawDriver()}
+            <Driver driver={this.props.driver} multiplier={this.state.multiplier} offset={this.state.offset} />
             {this.drawCompletedLegs()}
             {this.drawCompletedLegToDriver()}
           </Layer>
         </Stage>
       </div>
     );
-  }
-
-  // function to draw the driver
-  drawDriver = () => {
-    let length = 15;
-    return (
-      <Rect
-        /* scaling the coordintes by x5 and shifting to center*/
-        x={this.state.offset + this.props.driver.x * this.state.multiplier - length / 2}
-        y={this.props.driver.y * this.state.multiplier - length / 2}
-        width={length}
-        height={length}
-        fill="blue"
-      />
-    )
   }
 
   // function to draw the line from the last completed leg to driver
