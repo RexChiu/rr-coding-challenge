@@ -14,13 +14,14 @@ const SliderWithTooltip = createSliderWithTooltip(Slider);
 class App extends Component {
   constructor(props) {
     super(props);
-    // initialized an empty driver object
-    let driver = {};
-    driver.activeLegID = "";
-    driver.legProgress = "";
+    // initialized an empty bonusDriver object
+    let bonusDriver = {};
+    bonusDriver.x = "";
+    bonusDriver.y = "";
     this.state = {
       loaded: false,
       dropdownOpen: false,
+      bonusDriver
     }
   }
   // Grabs legs, stops, and driver info once mounted
@@ -222,15 +223,18 @@ class App extends Component {
   submitBonusDriver = async (event) => {
     // stops default form action
     event.preventDefault();
-    // constructs and sends payload of bonusDriver
-    let payloadBonusDriver = {
-      x: this.state.bonusDriverX,
-      y: this.state.bonusDriverY
+    // only submit if bonusDriver coords are valid
+    if (this.state.bonusDriverX >= 0 && this.state.bonusDriverX <= 200 && this.state.bonusDriverY >= 0 && this.state.bonusDriverY <= 200) {
+      // constructs and sends payload of bonusDriver
+      let payloadBonusDriver = {
+        x: this.state.bonusDriverX,
+        y: this.state.bonusDriverY
+      }
+      let bonusDriver = await axios.put('/bonusdriver', payloadBonusDriver);
+      this.setState({
+        bonusDriver: bonusDriver.data
+      })
     }
-    let bonusDriver = await axios.put('/bonusdriver', payloadBonusDriver);
-    this.setState({
-      bonusDriver: bonusDriver.data
-    })
   }
 
   // function to have a custom tooltip for slider
