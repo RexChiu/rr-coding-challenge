@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Stage, Layer, Rect, Line } from 'react-konva';
+import { Stage, Layer, Line } from 'react-konva';
 
 import Border from './Border';
 import Stops from './Stops';
 import Driver from './Driver';
+import CompletedLegs from './CompletedLegs';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -25,6 +26,7 @@ class ViewPort extends Component {
   }
 
   render() {
+    let currentLeg = this.findCurrentLeg();
     return (
       <div className="App">
         <Stage width={window.innerWidth} height={window.innerHeight * .7}>
@@ -32,7 +34,8 @@ class ViewPort extends Component {
             <Border multiplier={this.state.multiplier} offset={this.state.offset} />
             <Stops stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <Driver driver={this.props.driver} multiplier={this.state.multiplier} offset={this.state.offset} />
-            {this.drawCompletedLegs()}
+            <CompletedLegs currentLeg={currentLeg} legs={this.props.legs} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
+            {/* {this.drawCompletedLegs()} */}
             {this.drawCompletedLegToDriver()}
           </Layer>
         </Stage>
@@ -58,40 +61,6 @@ class ViewPort extends Component {
         strokeWidth={5}
       />
     )
-  }
-
-  // function to draw the completed legs of the driver
-  drawCompletedLegs = () => {
-    // find the current leg node
-    let currentLeg = this.findCurrentLeg();
-    let currentLegNode = this.props.legs.find(currentLeg);
-    // create an array containing the completed lines
-    let lineArr = [];
-    lineArr = lineArr.concat(this.traceBackToStart(currentLegNode, []));
-    return (
-      <Line
-        key={"LineCats"}
-        x={this.state.offset}
-        y={0}
-        points={lineArr}
-        stroke="green"
-        strokeWidth={5}
-      />
-    )
-  }
-
-  // tail call recursive helper function to trace route back to beginning
-  traceBackToStart = (currLeg, returnArr) => {
-    // base case
-    if (currLeg === null) {
-      return returnArr;
-    }
-    // recursive case
-    let legEndX = this.props.stops[currLeg.data.startStop].x * this.state.multiplier;
-    let legEndY = this.props.stops[currLeg.data.startStop].y * this.state.multiplier;
-    // creates a line connecting the stops of the current leg
-    returnArr = returnArr.concat([legEndX, legEndY]);
-    return this.traceBackToStart(currLeg.prev, returnArr);
   }
 
   // function to get the current dimensions of the window
