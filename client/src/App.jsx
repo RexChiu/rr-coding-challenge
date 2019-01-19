@@ -36,6 +36,8 @@ class App extends Component {
       let driver = await axios.get('/driver');
       let legProgress = driver.data.legProgress;
       driver = this.calculateDriverInfo(driver.data, parsedStops);
+      // retrievers the bonus driver data
+      let bonusDriver = await axios.get('/bonusdriver');
       // saves the parsed data into state
       this.setState({
         rawLegs: legs.data,
@@ -43,6 +45,7 @@ class App extends Component {
         legs: parsedLegs,
         stops: parsedStops,
         driver,
+        bonusDriver: bonusDriver.data,
         legProgress,
         loaded: true
       });

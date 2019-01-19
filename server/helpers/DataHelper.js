@@ -40,6 +40,10 @@ module.exports = function makeDataHelpers(db) {
     setBonusDriver(bonusDriver) {
       db.bonusDriver = bonusDriver;
       return bonusDriver;
+    },
+    // gets the bonus driver from the database
+    getBonusDriver() {
+      return db.bonusDriver;
     }
   }
 }
