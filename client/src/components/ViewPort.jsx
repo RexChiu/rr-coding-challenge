@@ -6,6 +6,7 @@ import Stops from './Stops';
 import Driver from './Driver';
 import CompletedLegs from './CompletedLegs';
 import CompletedLegToDriver from './CompletedLegToDriver';
+import BonusDriver from './BonusDriver';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -13,7 +14,6 @@ class ViewPort extends Component {
     super(props);
     let multiplier = 2.5;
     this.state = {
-      loaded: false,
       multiplier, // multiplier to increase the scale of the map
       offset: window.innerWidth / 2 - (200 * multiplier / 2) // used to push viewport to the middle
     };
@@ -36,6 +36,7 @@ class ViewPort extends Component {
             <Driver driver={this.props.driver} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegs currentLeg={currentLeg} legs={this.props.legs} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegToDriver currentLeg={currentLeg} driver={this.props.driver} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
+            <BonusDriver bonusDriver={this.props.bonusDriver} multiplier={this.state.multiplier} offset={this.state.offset} />
           </Layer>
         </Stage>
       </div>

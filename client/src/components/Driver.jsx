@@ -2,7 +2,7 @@ import React from 'react';
 import { Rect } from 'react-konva';
 
 // function to draw the driver
-function drawDriver(props) {
+function Driver(props) {
   let length = 15;
   return (
     <Rect
@@ -16,4 +16,4 @@ function drawDriver(props) {
   )
 }
 
-export default drawDriver;
+export default Driver;

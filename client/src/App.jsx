@@ -91,7 +91,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} />
+          <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} bonusDriver={this.state.bonusDriver} />
         </Fragment>
       );
     } else {
@@ -234,6 +234,8 @@ class App extends Component {
       this.setState({
         bonusDriver: bonusDriver.data
       })
+    } else {
+      alert("Bonus Driver coords must be between 0 and 200");
     }
   }
 
