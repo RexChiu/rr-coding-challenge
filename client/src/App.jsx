@@ -215,16 +215,20 @@ class App extends Component {
 
   // controlled inputs for Bonus Driver X
   changeBonusDriverX = (event) => {
-    let bonusDriver = this.state.bonusDriver;
+    let bonusDriver = JSON.parse(JSON.stringify(this.state.bonusDriver));
     bonusDriver.x = Number(event.target.value);
+    // keeps bonusDriverX within 0 and 200
+    bonusDriver.x = Math.min(Math.max(bonusDriver.x, 0), 200);
     this.setState({
       bonusDriver
     })
   }
   // controlled inputs for Bonus Driver Y
   changeBonusDriverY = (event) => {
-    let bonusDriver = this.state.bonusDriver;
+    let bonusDriver = JSON.parse(JSON.stringify(this.state.bonusDriver));
     bonusDriver.y = Number(event.target.value);
+    // keeps bonusDriverY within 0 and 200
+    bonusDriver.y = Math.min(Math.max(bonusDriver.y, 0), 200);
     this.setState({
       bonusDriver
     })
@@ -234,13 +238,9 @@ class App extends Component {
     // stops default form action
     event.preventDefault();
     // only submit if bonusDriver coords are valid
-    if (this.state.bonusDriverX >= 0 && this.state.bonusDriverX <= 200 && this.state.bonusDriverY >= 0 && this.state.bonusDriverY <= 200) {
-      // constructs and sends payload of bonusDriver
-      let payloadBonusDriver = {
-        x: this.state.bonusDriverX,
-        y: this.state.bonusDriverY
-      }
-      let bonusDriver = await axios.put('/bonusdriver', payloadBonusDriver);
+    if (this.state.bonusDriver.x >= 0 && this.state.bonusDriver.x <= 200 && this.state.bonusDriver.y >= 0 && this.state.bonusDriver.y <= 200) {
+      // sends payload of bonusDriver
+      let bonusDriver = await axios.put('/bonusdriver', this.state.bonusDriver);
       this.setState({
         bonusDriver: bonusDriver.data
       })
