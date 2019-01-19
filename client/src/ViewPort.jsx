@@ -30,6 +30,7 @@ class ViewPort extends Component {
             {this.generateStops()}
             {this.drawDriver()}
             {this.drawCompletedLegs()}
+            {this.drawCompletedLegToDriver()}
           </Layer>
         </Stage>
       </div>
@@ -83,23 +84,15 @@ class ViewPort extends Component {
     )
   }
 
-  // function to draw the completed legs of the driver
-  drawCompletedLegs = () => {
-    // using array of the legs, finds the current leg
-    let currentLeg = null;
-    this.props.rawLegs.forEach((leg) => {
-      if (leg.legID === this.props.driver.activeLegID) {
-        currentLeg = leg;
-      }
-    });
-    // initialize an array containing the completed lines
-    let lineArr = [];
+  // function to draw the line from the last completed leg to driver
+  drawCompletedLegToDriver = () => {
+    let currentLeg = this.findCurrentLeg();
     // draw line from legStart to driver
     let legStartX = this.state.offset + this.props.stops[currentLeg.startStop].x * this.state.multiplier;
     let legStartY = this.props.stops[currentLeg.startStop].y * this.state.multiplier;
     let legEndX = this.state.offset + this.props.driver.x * this.state.multiplier;
     let legEndY = this.props.driver.y * this.state.multiplier;
-    lineArr.push(
+    return (
       <Line
         key={currentLeg.legID}
         x={0}
@@ -109,6 +102,14 @@ class ViewPort extends Component {
         strokeWidth={5}
       />
     )
+  }
+
+  // function to draw the completed legs of the driver
+  drawCompletedLegs = () => {
+    // using array of the legs, finds the current leg
+    let currentLeg = this.findCurrentLeg();
+    // initialize an array containing the completed lines
+    let lineArr = [];
     // using currentLeg - 1, iterate to the root using DLL
     let currentLegNode = this.props.legs.find(currentLeg);
     return lineArr.concat(this.traceBackToStart(currentLegNode.prev, []));
@@ -146,6 +147,15 @@ class ViewPort extends Component {
       windowWidth: window.innerWidth,
       offset: window.innerWidth / 2 - (200 * this.state.multiplier / 2)
     })
+  }
+
+  // function to find the current leg the driver is on
+  findCurrentLeg = () => {
+    for (let leg of this.props.rawLegs) {
+      if (leg.legID === this.props.driver.activeLegID) {
+        return leg;
+      }
+    }
   }
 }
 
