@@ -4,6 +4,14 @@ import helper from '../helpers/helper';
 
 // function to draw a line from the bonus driver to the closest stop and the end
 class BonusDriverToEnd extends Component {
+  // lifecycle method to stop the rerendering unless bonus driver is changed
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.bonusDriver.x !== this.props.bonusDriver.x || nextProps.bonusDriver.y !== this.props.bonusDriver.y || nextProps.offset !== this.props.offset) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
     let closestStop = this.findClosestStop();
     let closestStopX = closestStop.x * this.props.multiplier;
