@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 
 import Border from './Border';
+import Stops from './Stops';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -28,7 +29,7 @@ class ViewPort extends Component {
         <Stage width={window.innerWidth} height={window.innerHeight * .7}>
           <Layer>
             <Border multiplier={this.state.multiplier} offset={this.state.offset} />
-            {this.generateStops()}
+            <Stops stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             {this.drawDriver()}
             {this.drawCompletedLegs()}
             {this.drawCompletedLegToDriver()}
@@ -36,28 +37,6 @@ class ViewPort extends Component {
         </Stage>
       </div>
     );
-  }
-
-
-
-  // function to generates a rect for every stop
-  generateStops = () => {
-    let stopsArr = [];
-    Object.values(this.props.stops).forEach((stop) => {
-      let length = 10;
-      stopsArr.push(
-        <Rect
-          /* scaling the coordintes by x5 and shifting to center*/
-          x={this.state.offset + stop.x * this.state.multiplier - length / 2}
-          y={stop.y * this.state.multiplier - length / 2}
-          width={length}
-          height={length}
-          fill="red"
-          key={stop.name}
-        />
-      )
-    });
-    return stopsArr;
   }
 
   // function to draw the driver
