@@ -3,9 +3,9 @@ import { Rect } from 'react-konva';
 
 // function to generates a rect for every stop
 class Stops extends Component {
-  // lifecycle method to stop the rerendering of a completely static thing
-  shouldComponentUpdate(nextProps, nextState) {
-    return false;
+  // lifecycle method to stop the rerendering of a completely static thing unless needed
+  shouldComponentUpdate(nextProps) {
+    return (nextProps.offset !== this.props.offset) ? true : false;
   }
 
   render() {
