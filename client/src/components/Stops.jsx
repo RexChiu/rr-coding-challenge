@@ -19,7 +19,7 @@ class Stops extends Component {
           y={stop.y * this.props.multiplier - length / 2}
           width={length}
           height={length}
-          fill="red"
+          fill="black"
           key={stop.name}
         />
       )

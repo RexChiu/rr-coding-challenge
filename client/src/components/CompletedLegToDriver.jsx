@@ -5,14 +5,14 @@ import { Line } from 'react-konva';
 function CompletedLegToDriver(props) {
   let currentLeg = props.currentLeg;
   // draw line from legStart to driver
-  let legStartX = props.offset + props.stops[currentLeg.startStop].x * props.multiplier;
+  let legStartX = props.stops[currentLeg.startStop].x * props.multiplier;
   let legStartY = props.stops[currentLeg.startStop].y * props.multiplier;
-  let legEndX = props.offset + props.driver.x * props.multiplier;
+  let legEndX = props.driver.x * props.multiplier;
   let legEndY = props.driver.y * props.multiplier;
   return (
     <Line
       key={currentLeg.legID}
-      x={0}
+      x={props.offset}
       y={0}
       points={[legStartX, legStartY, legEndX, legEndY]}
       stroke="green"
