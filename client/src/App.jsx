@@ -5,10 +5,13 @@ import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './App.css';
-import ViewPort from './components/ViewPort';
 import axios from 'axios'
+
+import ViewPort from './components/ViewPort';
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
+import helper from './helpers/helper';
+
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 class App extends Component {
@@ -161,7 +164,7 @@ class App extends Component {
     let currentLegNode = this.state.legs.find(currentLeg);
     // find the distance from current driver position to current endStop
     let endStop = this.state.stops[currentLegNode.data.endStop];
-    let distanceDriverToNextStop = this.calculateDistance(this.state.driver.x, this.state.driver.y, endStop.x, endStop.y);
+    let distanceDriverToNextStop = helper.calculateDistance(this.state.driver.x, this.state.driver.y, endStop.x, endStop.y);
     let timeNeededDriverToNextStop = distanceDriverToNextStop / currentLegNode.data.speedLimit;
     let remainingTimeNeeded = this.calculateTripTimeToEnd(currentLegNode.next, timeNeededDriverToNextStop);
     return (
@@ -274,14 +277,9 @@ class App extends Component {
     // calculates the distance, divides the distance by the speed limit
     let startStop = currLeg.data.startStop;
     let endStop = currLeg.data.endStop;
-    let distance = this.calculateDistance(this.state.stops[startStop].x, this.state.stops[startStop].y, this.state.stops[endStop].x, this.state.stops[endStop].y);
+    let distance = helper.calculateDistance(this.state.stops[startStop].x, this.state.stops[startStop].y, this.state.stops[endStop].x, this.state.stops[endStop].y);
     let timeNeeded = distance / currLeg.data.speedLimit;
     return this.calculateTripTimeToEnd(currLeg.next, tripTime + timeNeeded);
-  }
-
-  // function to calculate the distance between two points
-  calculateDistance = (x1, y1, x2, y2) => {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   }
 
   // function to construct legProgress payload
