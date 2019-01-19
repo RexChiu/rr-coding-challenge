@@ -40,7 +40,7 @@ class ViewPort extends Component {
   // function to draw a black border around the grid
   drawBorder = () => {
     return (<Line
-      key="Cats"
+      key="BorderCats"
       x={this.state.offset}
       y={0}
       points={[0, 0, 200 * this.state.multiplier, 0, 200 * this.state.multiplier, 200 * this.state.multiplier, 0, 200 * this.state.multiplier]}
@@ -106,13 +106,22 @@ class ViewPort extends Component {
 
   // function to draw the completed legs of the driver
   drawCompletedLegs = () => {
-    // using array of the legs, finds the current leg
+    // find the current leg node
     let currentLeg = this.findCurrentLeg();
-    // initialize an array containing the completed lines
-    let lineArr = [];
-    // using currentLeg - 1, iterate to the root using DLL
     let currentLegNode = this.props.legs.find(currentLeg);
-    return lineArr.concat(this.traceBackToStart(currentLegNode.prev, []));
+    // create an array containing the completed lines
+    let lineArr = [];
+    lineArr = lineArr.concat(this.traceBackToStart(currentLegNode, []));
+    return (
+      <Line
+        key={"LineCats"}
+        x={this.state.offset}
+        y={0}
+        points={lineArr}
+        stroke="green"
+        strokeWidth={5}
+      />
+    )
   }
 
   // tail call recursive helper function to trace route back to beginning
@@ -122,21 +131,10 @@ class ViewPort extends Component {
       return returnArr;
     }
     // recursive case
-    let legStartX = this.props.stops[currLeg.data.startStop].x * this.state.multiplier;
-    let legStartY = this.props.stops[currLeg.data.startStop].y * this.state.multiplier;
-    let legEndX = this.props.stops[currLeg.data.endStop].x * this.state.multiplier;
-    let legEndY = this.props.stops[currLeg.data.endStop].y * this.state.multiplier;
+    let legEndX = this.props.stops[currLeg.data.startStop].x * this.state.multiplier;
+    let legEndY = this.props.stops[currLeg.data.startStop].y * this.state.multiplier;
     // creates a line connecting the stops of the current leg
-    returnArr.push(
-      <Line
-        key={currLeg.data.legID}
-        x={this.state.offset}
-        y={0}
-        points={[legStartX, legStartY, legEndX, legEndY]}
-        stroke="green"
-        strokeWidth={5}
-      />
-    )
+    returnArr = returnArr.concat([legEndX, legEndY]);
     return this.traceBackToStart(currLeg.prev, returnArr);
   }
 
