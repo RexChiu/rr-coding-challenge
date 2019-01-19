@@ -5,7 +5,7 @@ import { Line } from 'react-konva';
 class CompletedLegs extends Component {
   // lifecycle method to stop the rerendering unless current leg is changed
   shouldComponentUpdate(nextProps) {
-    return (nextProps.currentLeg !== this.props.currentLeg) ? true : false;
+    return (nextProps.currentLeg !== this.props.currentLeg || nextProps.offset !== this.props.offset) ? true : false;
   }
 
   render() {
