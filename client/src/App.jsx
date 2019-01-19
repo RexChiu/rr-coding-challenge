@@ -183,8 +183,8 @@ class App extends Component {
         <Form className="d-flex justify-content-center align-items-center text-center">
           <FormGroup className="row my-0">
             <div className="col-lg-6 px-0">
-              <Input className="text-center" type="text" name="x" id="bonusDriverX" placeholder={this.state.bonusDriverX ? this.state.bonusDriverX : "X"} onChange={this.changeBonusDriverX} />
-              <Input className="text-center" type="text" name="y" id="bonusDriverY" placeholder={this.state.bonusDriverY ? this.state.bonusDriverX : "Y"} onChange={this.changeBonusDriverY} />
+              <Input className="text-center" type="text" name="x" id="bonusDriverX" placeholder={this.state.bonusDriver.x ? this.state.bonusDriver.x : "X"} onChange={this.changeBonusDriverX} />
+              <Input className="text-center" type="text" name="y" id="bonusDriverY" placeholder={this.state.bonusDriver.y ? this.state.bonusDriver.y : "Y"} onChange={this.changeBonusDriverY} />
             </div>
             <div className="col-lg-6 px-2 my-auto">
               <Button onClick={this.submitBonusDriver}>Submit</Button>
@@ -215,14 +215,18 @@ class App extends Component {
 
   // controlled inputs for Bonus Driver X
   changeBonusDriverX = (event) => {
+    let bonusDriver = this.state.bonusDriver;
+    bonusDriver.x = Number(event.target.value);
     this.setState({
-      bonusDriverX: Number(event.target.value)
+      bonusDriver
     })
   }
-  // controlled inputs for Bonus Driver X
+  // controlled inputs for Bonus Driver Y
   changeBonusDriverY = (event) => {
+    let bonusDriver = this.state.bonusDriver;
+    bonusDriver.y = Number(event.target.value);
     this.setState({
-      bonusDriverY: Number(event.target.value)
+      bonusDriver
     })
   }
   // submit bonus driver to server
