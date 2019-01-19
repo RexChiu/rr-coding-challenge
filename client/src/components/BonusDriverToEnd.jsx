@@ -2,20 +2,23 @@ import React, { Component } from 'react';
 import { Line } from 'react-konva';
 import helper from '../helpers/helper';
 
-// function to draw a line from the bonus driver to the closest stop
-class BonusDriverToClosestStop extends Component {
+// function to draw a line from the bonus driver to the closest stop and the end
+class BonusDriverToEnd extends Component {
   render() {
     let closestStop = this.findClosestStop();
     let closestStopX = closestStop.x * this.props.multiplier;
     let closestStopY = closestStop.y * this.props.multiplier;
     let bonusDriverX = this.props.bonusDriver.x * this.props.multiplier;
     let bonusDriverY = this.props.bonusDriver.y * this.props.multiplier;
+    let legNode = this.findLegGivenStartStop(closestStop);
+    let pathToEnd = helper.traceStops(legNode, "next", "endStop", this.props.stops, this.props.multiplier, [])
+
     return (
       <Line
         key="bonusDriverToClosest"
         x={this.props.offset}
         y={0}
-        points={[closestStopX, closestStopY, bonusDriverX, bonusDriverY]}
+        points={[bonusDriverX, bonusDriverY, closestStopX, closestStopY].concat(pathToEnd)}
         stroke="red"
         strokeWidth={2}
       />
@@ -37,6 +40,15 @@ class BonusDriverToClosestStop extends Component {
     }
     return closestStop;
   }
+
+  // function to find the leg node given start stop
+  findLegGivenStartStop = (startStop) => {
+    for (let leg of this.props.rawLegs) {
+      if (leg.startStop === startStop.name) {
+        return this.props.legs.find(leg);
+      }
+    }
+  }
 }
 
-export default BonusDriverToClosestStop;
+export default BonusDriverToEnd;

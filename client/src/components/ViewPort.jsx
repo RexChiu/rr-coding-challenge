@@ -7,7 +7,7 @@ import Driver from './Driver';
 import CompletedLegs from './CompletedLegs';
 import CompletedLegToDriver from './CompletedLegToDriver';
 import BonusDriver from './BonusDriver';
-import BonusDriverToClosestStop from './BonusDriverToClosestStop';
+import BonusDriverToEnd from './BonusDriverToEnd';
 
 // class responsible for drawing the viewport based on props passed down
 class ViewPort extends Component {
@@ -38,7 +38,7 @@ class ViewPort extends Component {
             <CompletedLegs currentLeg={currentLeg} legs={this.props.legs} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <CompletedLegToDriver currentLeg={currentLeg} driver={this.props.driver} stops={this.props.stops} multiplier={this.state.multiplier} offset={this.state.offset} />
             <BonusDriver bonusDriver={this.props.bonusDriver} multiplier={this.state.multiplier} offset={this.state.offset} />
-            <BonusDriverToClosestStop bonusDriver={this.props.bonusDriver} rawStops={this.props.rawStops} multiplier={this.state.multiplier} offset={this.state.offset} />
+            <BonusDriverToEnd bonusDriver={this.props.bonusDriver} legs={this.props.legs} rawLegs={this.props.rawLegs} stops={this.props.stops} rawStops={this.props.rawStops} multiplier={this.state.multiplier} offset={this.state.offset} />
           </Layer>
         </Stage>
       </div>
