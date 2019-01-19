@@ -9,7 +9,6 @@ class CompletedLegs extends Component {
   }
 
   render() {
-    console.log("legs");
     // find the current leg node
     let currentLegNode = this.props.legs.find(this.props.currentLeg);
     // create an array containing the completed lines

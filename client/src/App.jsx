@@ -186,10 +186,13 @@ class App extends Component {
     return `${v}%`;
   }
 
-  // function to handle slider changes
+  // function to handle slider changes, moves driver around as it changes
   onSliderChange = (value) => {
+    let tempDriver = this.state.driver;
+    tempDriver.legProgress = value / 100;
     this.setState({
-      legProgress: value.toString()
+      legProgress: value.toString(),
+      driver: this.interpolateDriver(tempDriver, this.state.stops, tempDriver.legProgress)
     })
   }
 
@@ -276,10 +279,16 @@ class App extends Component {
     } else {
       updatedDriver.legProgress = Number(driver.legProgress) * 0.01;
     }
-    // interpolates the position of the driver
-    updatedDriver.x = parsedStops[updatedDriver.start].x + (parsedStops[updatedDriver.end].x - parsedStops[updatedDriver.start].x) * updatedDriver.legProgress;
-    updatedDriver.y = parsedStops[updatedDriver.start].y + (parsedStops[updatedDriver.end].y - parsedStops[updatedDriver.start].y) * updatedDriver.legProgress;
+    updatedDriver = this.interpolateDriver(updatedDriver, parsedStops, updatedDriver.legProgress)
     return updatedDriver;
+  }
+
+  // function to interpolate the driver's position given leg progress
+  interpolateDriver = (driver, parsedStops, legProgress) => {
+    // interpolates the position of the driver
+    driver.x = parsedStops[driver.start].x + (parsedStops[driver.end].x - parsedStops[driver.start].x) * legProgress;
+    driver.y = parsedStops[driver.start].y + (parsedStops[driver.end].y - parsedStops[driver.start].y) * legProgress;
+    return driver;
   }
 }
 
