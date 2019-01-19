@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import ReactLoading from 'react-loading';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Form, FormGroup, Input, Button } from 'reactstrap';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
@@ -69,14 +69,17 @@ class App extends Component {
         <Fragment>
           <div className="d-flex justify-content-center align-items-center text-center container">
             <div className="row">
-              <div className="mx-auto align-self-center col-lg-4">
+              <div className="mx-auto align-self-center col-lg-3">
                 {this._renderDropDownButton()}
               </div>
-              <div className="mx-auto align-self-center col-lg-4">
+              <div className="mx-auto align-self-center col-lg-3">
                 {this._renderTotalTripTime()}
               </div>
-              <div className="mx-auto align-self-center col-lg-4">
+              <div className="mx-auto align-self-center col-lg-3">
                 {this._renderRemainingTripTime()}
+              </div>
+              <div className="mx-auto align-self-center col-lg-3">
+                {this._renderBonusDriverForm()}
               </div>
             </div>
           </div>
@@ -115,7 +118,9 @@ class App extends Component {
     });
     return (
       <Fragment>
-        <Label for="dropdownToggle"><strong>Current Leg</strong></Label>
+        <div>
+          <Label for="dropdownToggle"><strong>Current Leg</strong></Label>
+        </div>
         <ButtonDropdown id="dropdownToggle" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
           <DropdownToggle caret>
             {this.state.driver.activeLegID}
@@ -161,6 +166,26 @@ class App extends Component {
         <p>{remainingTimeNeeded}</p>
       </div>
     );
+  }
+
+  // function to tender the form for the bonus driver
+  _renderBonusDriverForm = () => {
+    return (
+      <div>
+        <strong>Bonus Driver</strong>
+        <Form className="container">
+          <FormGroup className="row my-0">
+            <div className="col-lg-6 px-0">
+              <Input className="text-center" type="text" name="x" id="bonusDriverX" placeholder="X" />
+              <Input className="text-center" type="text" name="y" id="bonusDriverY" placeholder="Y" />
+            </div>
+            <div className="col-lg-6 px-2 my-auto">
+              <Button>Submit</Button>
+            </div>
+          </FormGroup>
+        </Form>
+      </div>
+    )
   }
 
   // function to render a slider for legProgress
