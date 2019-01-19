@@ -1,0 +1,13 @@
+# Extra Features
+- Drawn using React Konvas (canvas)
+- Legs parsed into Doubly Linked List for easy traversal
+- Stops parsed into Hashmap for easy retrieval
+- Bonus Driver
+  - Controlled Inputs and error handling of Bonus Driver box
+  - Toggle-able Bonus Driver rendering
+- Total Trip Time & Remaining Time display
+  - Remaining Time dynamically changes according to Leg Progress
+- Leg Progress Slider
+  - Adjustment of Leg Progress to 0% or 100% shifts Driver to previous/next stop
+  - Adjustments of Leg Progress only redraws line from current leg's startStop to driver
+  - Visually changes immediately, sends REST request only when finished changing

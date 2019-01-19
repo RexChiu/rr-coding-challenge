@@ -8,7 +8,6 @@
     "konva": "^2.6.0",
     "rc-slider": "^8.6.4",
     "react": "^16.7.0",
-    "react-bootstrap": "^0.32.4",
     "react-dom": "^16.7.0",
     "react-konva": "^16.7.1",
     "react-loading": "^2.0.3",
