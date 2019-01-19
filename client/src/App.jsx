@@ -56,14 +56,14 @@ class App extends Component {
         <div>
           <h1>Rose Rocket Coding Challenge</h1>
         </div>
-        {this._renderViewPort()}
+        {this._render()}
       </div>
     );
   }
 
-  // function to render the viewport if API calls are completed
+  // function to render the forms and viewport if API calls are completed
   // passes down state as props
-  _renderViewPort = () => {
+  _render = () => {
     if (this.state.loaded) {
       return (
         <Fragment>

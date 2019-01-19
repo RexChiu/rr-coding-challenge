@@ -14,8 +14,6 @@ class ViewPort extends Component {
     let multiplier = 2.5;
     this.state = {
       loaded: false,
-      windowHeight: window.innerHeight,
-      windowWidth: window.innerWidth,
       multiplier, // multiplier to increase the scale of the map
       offset: window.innerWidth / 2 - (200 * multiplier / 2) // used to push viewport to the middle
     };
@@ -47,8 +45,6 @@ class ViewPort extends Component {
   // function to get the current dimensions of the window
   updateWindow = () => {
     this.setState({
-      windowHeight: window.innerHeight,
-      windowWidth: window.innerWidth,
       offset: window.innerWidth / 2 - (200 * this.state.multiplier / 2)
     })
   }
