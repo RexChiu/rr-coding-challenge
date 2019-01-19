@@ -20,11 +20,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 var legsRouter = require('./routes/legs')(DataHelper);
 var stopsRouter = require('./routes/stops')(DataHelper);
 var driverRouter = require('./routes/driver')(DataHelper);
+var bonusDriverRouter = require('./routes/bonusDriver')(DataHelper);
 
 // routes
 app.use('/legs', legsRouter);
 app.use('/stops', stopsRouter);
 app.use('/driver', driverRouter);
+app.use('/bonusdriver', bonusDriverRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

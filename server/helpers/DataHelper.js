@@ -35,6 +35,11 @@ module.exports = function makeDataHelpers(db) {
         }
       };
       return Promise.reject("Cannot find end stop");
+    },
+    // updates the bonus driver in the database
+    setBonusDriver(bonusDriver) {
+      db.bonusDriver = bonusDriver;
+      return bonusDriver;
     }
   }
 }

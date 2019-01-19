@@ -224,12 +224,12 @@ class App extends Component {
     event.preventDefault();
     // constructs and sends payload of bonusDriver
     let payloadBonusDriver = {
-      bonusDriverX: this.state.bonusDriverX,
-      bonusDriverY: this.state.bonusDriverY
+      x: this.state.bonusDriverX,
+      y: this.state.bonusDriverY
     }
-    let bonusDriver = await axios.put('/driver', payloadBonusDriver);
+    let bonusDriver = await axios.put('/bonusdriver', payloadBonusDriver);
     this.setState({
-      bonusDriver
+      bonusDriver: bonusDriver.data
     })
   }
 
