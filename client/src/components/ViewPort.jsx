@@ -11,12 +11,13 @@ import CompletedLegToDriver from './CompletedLegToDriver';
 class ViewPort extends Component {
   constructor(props) {
     super(props);
+    let multiplier = 2.5;
     this.state = {
       loaded: false,
       windowHeight: window.innerHeight,
       windowWidth: window.innerWidth,
-      multiplier: 2.5, // multiplier to increase the scale of the map
-      offset: 0 // used to push viewport to the middle
+      multiplier, // multiplier to increase the scale of the map
+      offset: window.innerWidth / 2 - (200 * multiplier / 2) // used to push viewport to the middle
     };
   }
 
