@@ -7,7 +7,7 @@ module.exports = {
   // tail call recursive helper function to trace route back to beginning
   traceStops: function traceStops(currLeg, direction, stopType, stops, multiplier, returnArr) {
     // base case
-    if (currLeg === null) {
+    if (currLeg === null || currLeg === undefined) {
       return returnArr;
     }
     // recursive case

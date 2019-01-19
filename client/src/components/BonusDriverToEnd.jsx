@@ -11,7 +11,7 @@ class BonusDriverToEnd extends Component {
     let bonusDriverX = this.props.bonusDriver.x * this.props.multiplier;
     let bonusDriverY = this.props.bonusDriver.y * this.props.multiplier;
     let legNode = this.findLegGivenStartStop(closestStop);
-    let pathToEnd = helper.traceStops(legNode, "next", "endStop", this.props.stops, this.props.multiplier, [])
+    let pathToEnd = helper.traceStops(legNode, "next", "endStop", this.props.stops, this.props.multiplier, []);
 
     return (
       <Line
@@ -33,7 +33,7 @@ class BonusDriverToEnd extends Component {
     // calculates distance between bonusDriver and each stop, checks distance
     for (let stop of this.props.rawStops) {
       let distance = helper.calculateDistance(this.props.bonusDriver.x, this.props.bonusDriver.y, stop.x, stop.y);
-      if (distance < minDistance) {
+      if (distance <= minDistance) {
         minDistance = distance;
         closestStop = stop;
       }
