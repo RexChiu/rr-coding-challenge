@@ -149,18 +149,12 @@ class App extends Component {
 
   // function to capture the changes of the slider once it is stopped
   onAfterChange = async (value) => {
-    let payloadDriver = this.makePayloadDriver();
-    // sends payload to server
-    await this.sendPayloadDriver(payloadDriver);
-  }
-
-  // function to construct legProgress payload
-  makePayloadDriver = () => {
     // reconstructs the db format for driver
     let payloadDriver = {};
     payloadDriver.activeLegID = this.state.driver.activeLegID;
     payloadDriver.legProgress = this.state.legProgress;
-    return payloadDriver;
+    // sends payload to server
+    await this.sendPayloadDriver(payloadDriver);
   }
 
   // function to send a payloadDriver and sets the response as the new state
