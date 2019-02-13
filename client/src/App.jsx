@@ -8,6 +8,7 @@ import './App.css';
 import axios from 'axios'
 
 import ViewPort from './components/ViewPort';
+import Forms from './components/Forms'
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
 import helper from './helpers/helper';
@@ -93,6 +94,7 @@ class App extends Component {
               </div>
             </div>
           </div>
+          <Forms />
           <ViewPort legs={this.state.legs} stops={this.state.stops} driver={this.state.driver} rawLegs={this.state.rawLegs} rawStops={this.state.rawStops} bonusDriver={this.state.bonusDriver} showBonusDriver={this.state.showBonusDriver} />
         </Fragment>
       );
