@@ -111,44 +111,6 @@ class App extends Component {
     }
   }
 
-  // function to render the remaining trip time
-  _renderRemainingTripTime = () => {
-    // finds the leg node of current driver
-    let currentLeg = null;
-    this.state.rawLegs.forEach((leg) => {
-      if (leg.legID === this.state.driver.activeLegID) {
-        currentLeg = leg;
-      }
-    });
-    let currentLegNode = this.state.legs.find(currentLeg);
-    // find the distance from current driver position to current endStop
-    let endStop = this.state.stops[currentLegNode.data.endStop];
-    let distanceDriverToNextStop = helper.calculateDistance(this.state.driver.x, this.state.driver.y, endStop.x, endStop.y);
-    let timeNeededDriverToNextStop = distanceDriverToNextStop / currentLegNode.data.speedLimit;
-    let remainingTimeNeeded = this.calculateTripTimeToEnd(currentLegNode.next, timeNeededDriverToNextStop);
-    return (
-      <div>
-        <strong>Remaining Time</strong>
-        <p>{remainingTimeNeeded}</p>
-      </div>
-    );
-  }
-
-  // tail call recursive function to calculate the trip time from a given node to the end
-  calculateTripTimeToEnd = (currLeg, tripTime) => {
-    // base case
-    if (currLeg === null) {
-      return tripTime.toFixed(2) + " TUs";
-    }
-    // recursive case
-    // calculates the distance, divides the distance by the speed limit
-    let startStop = currLeg.data.startStop;
-    let endStop = currLeg.data.endStop;
-    let distance = helper.calculateDistance(this.state.stops[startStop].x, this.state.stops[startStop].y, this.state.stops[endStop].x, this.state.stops[endStop].y);
-    let timeNeeded = distance / currLeg.data.speedLimit;
-    return this.calculateTripTimeToEnd(currLeg.next, tripTime + timeNeeded);
-  }
-
   // function to render the form for the bonus driver
   _renderBonusDriverForm = () => {
     return (
