@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Line } from 'react-konva';
-import helper from '../helpers/helper';
+import helper from '../../helpers/helper';
 
 // function to draw the completed legs of the driver
 class CompletedLegs extends Component {

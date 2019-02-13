@@ -1,22 +1,18 @@
 import React, { Fragment, Component } from 'react';
 import ReactLoading from 'react-loading';
-import Slider, { createSliderWithTooltip } from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import 'rc-tooltip/assets/bootstrap.css';
+
 import './App.css';
 import axios from 'axios'
 
-import ViewPort from './components/ViewPort';
-import DropDownButton from './components/DropDownButton'
-import TotalTripTime from './components/TotalTripTime'
-import RemainingTime from './components/RemainingTime'
-import BonusDriverForm from './components/BonusDriverForm'
-import LegProgressSlider from './components/LegProgressSlider'
+import ViewPort from './components/ViewPort/ViewPort';
+import DropDownButton from './components/Forms/DropDownButton'
+import TotalTripTime from './components/Forms/TotalTripTime'
+import RemainingTime from './components/Forms/RemainingTime'
+import BonusDriverForm from './components/Forms/BonusDriverForm'
+import LegProgressSlider from './components/Forms/LegProgressSlider'
 
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
-
-const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 class App extends Component {
   constructor(props) {

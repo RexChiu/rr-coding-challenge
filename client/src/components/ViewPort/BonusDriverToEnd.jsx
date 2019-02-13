@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Line } from 'react-konva';
-import helper from '../helpers/helper';
+import helper from '../../helpers/helper';
 
 // function to draw a line from the bonus driver to the closest stop and the end
 class BonusDriverToEnd extends Component {
