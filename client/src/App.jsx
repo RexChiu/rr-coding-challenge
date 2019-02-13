@@ -10,6 +10,7 @@ import axios from 'axios'
 import ViewPort from './components/ViewPort';
 import DropDownButton from './components/DropDownButton'
 import TotalTripTime from './components/TotalTripTime'
+import RemainingTime from './components/RemainingTime'
 
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
@@ -82,7 +83,7 @@ class App extends Component {
                 <TotalTripTime legs={this.state.legs} stops={this.state.stops} />
               </div>
               <div className="mx-auto align-self-center col-lg-3">
-                {this._renderRemainingTripTime()}
+                <RemainingTime rawLegs={this.state.rawLegs} driver={this.state.driver} legs={this.state.legs} stops={this.state.stops} />
               </div>
               <div className="mx-auto align-self-center col-lg-3">
                 {this._renderBonusDriverForm()}
