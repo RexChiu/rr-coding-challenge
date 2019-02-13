@@ -9,6 +9,8 @@ import axios from 'axios'
 
 import ViewPort from './components/ViewPort';
 import DropDownButton from './components/DropDownButton'
+import TotalTripTime from './components/TotalTripTime'
+
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
 import helper from './helpers/helper';
@@ -77,7 +79,7 @@ class App extends Component {
                 <DropDownButton rawLegs={this.state.rawLegs} driver={this.state.driver} legProgress={this.state.legProgress} sendPayloadDriver={this.sendPayloadDriver} />
               </div>
               <div className="mx-auto align-self-center col-lg-3">
-                {this._renderTotalTripTime()}
+                <TotalTripTime legs={this.state.legs} stops={this.state.stops} />
               </div>
               <div className="mx-auto align-self-center col-lg-3">
                 {this._renderRemainingTripTime()}
@@ -106,65 +108,6 @@ class App extends Component {
         </div>
       );
     }
-  }
-
-  // function to render the dropdown button to display and select trip leg
-  _renderDropDownButton = () => {
-    // iterates through each leg and grabs the legID to populate drop down
-    let menuItemArr = [];
-    this.state.rawLegs.forEach((leg) => {
-      // sets active flag on current leg
-      if (leg.legID === this.state.driver.activeLegID) {
-        menuItemArr.push(<DropdownItem key={leg.legID} disabled={true}>{leg.legID}</DropdownItem>)
-      } else {
-        menuItemArr.push(<DropdownItem onClick={this.selectDropdown} key={leg.legID}>{leg.legID}</DropdownItem>)
-      }
-    });
-    return (
-      <Fragment>
-        <div>
-          <Label for="dropdownToggle"><strong>Current Leg</strong></Label>
-        </div>
-        <ButtonDropdown id="dropdownToggle" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-          <DropdownToggle caret>
-            {this.state.driver.activeLegID}
-          </DropdownToggle>
-          <DropdownMenu>
-            {menuItemArr}
-          </DropdownMenu>
-        </ButtonDropdown>
-      </Fragment>
-    )
-  }
-
-  // function to toggle the dropdown
-  toggleDropdown = () => {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    })
-  }
-
-  // function to capture the selected dropdown, send 
-  selectDropdown = async (event) => {
-    // update the driver activeLegID based on selected dropdown
-    // reconstructs the db format for driver
-    let payloadDriver = {};
-    payloadDriver.activeLegID = event.target.innerText;
-    payloadDriver.legProgress = this.state.legProgress;
-    // sends payload to server
-    await this.sendPayloadDriver(payloadDriver);
-  }
-
-  // function to render the total trip time
-  _renderTotalTripTime = () => {
-    let head = this.state.legs.getHeadNode();
-    let total = this.calculateTripTimeToEnd(head, 0);
-    return (
-      <div>
-        <strong>Total Time</strong>
-        <p>{total}</p>
-      </div>
-    );
   }
 
   // function to render the remaining trip time
