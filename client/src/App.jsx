@@ -1,6 +1,5 @@
 import React, { Fragment, Component } from 'react';
 import ReactLoading from 'react-loading';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Form, FormGroup, Input, Button } from 'reactstrap';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
@@ -11,10 +10,10 @@ import ViewPort from './components/ViewPort';
 import DropDownButton from './components/DropDownButton'
 import TotalTripTime from './components/TotalTripTime'
 import RemainingTime from './components/RemainingTime'
+import BonusDriverForm from './components/BonusDriverForm'
 
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
-import helper from './helpers/helper';
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -86,7 +85,7 @@ class App extends Component {
                 <RemainingTime rawLegs={this.state.rawLegs} driver={this.state.driver} legs={this.state.legs} stops={this.state.stops} />
               </div>
               <div className="mx-auto align-self-center col-lg-3">
-                {this._renderBonusDriverForm()}
+                <BonusDriverForm bonusDriver={this.state.bonusDriver} showBonusDriver={this.state.showBonusDriver} submitBonusDriver={this.submitBonusDriver} toggleBonusDriver={this.toggleBonusDriver} changeBonusDriver={this.changeBonusDriver} />
               </div>
             </div>
           </div>
@@ -111,47 +110,6 @@ class App extends Component {
     }
   }
 
-  // function to render the form for the bonus driver
-  _renderBonusDriverForm = () => {
-    return (
-      <div>
-        <strong>Bonus Driver</strong>
-        <Form className="d-flex justify-content-center align-items-center text-center">
-          <FormGroup className="row my-0">
-            <div className="col-lg-6 px-0">
-              <Input className="text-center" type="text" name="x" id="bonusDriverX" placeholder={this.state.bonusDriver.x ? this.state.bonusDriver.x : "X"} onChange={this.changeBonusDriverX} />
-              <Input className="text-center" type="text" name="y" id="bonusDriverY" placeholder={this.state.bonusDriver.y ? this.state.bonusDriver.y : "Y"} onChange={this.changeBonusDriverY} />
-            </div>
-            <div className="col-lg-6 px-2 my-auto">
-              <Button onClick={this.submitBonusDriver}>Submit</Button>
-              <Button onClick={this.toggleBonusDriver}>{this.state.showBonusDriver ? "Hide" : "Show"}</Button>
-            </div>
-          </FormGroup>
-        </Form>
-      </div>
-    )
-  }
-
-  // controlled inputs for Bonus Driver X
-  changeBonusDriverX = (event) => {
-    let bonusDriver = JSON.parse(JSON.stringify(this.state.bonusDriver));
-    bonusDriver.x = Number(event.target.value);
-    // keeps bonusDriverX within 0 and 200
-    bonusDriver.x = Math.min(Math.max(bonusDriver.x, 0), 200);
-    this.setState({
-      bonusDriver
-    })
-  }
-  // controlled inputs for Bonus Driver Y
-  changeBonusDriverY = (event) => {
-    let bonusDriver = JSON.parse(JSON.stringify(this.state.bonusDriver));
-    bonusDriver.y = Number(event.target.value);
-    // keeps bonusDriverY within 0 and 200
-    bonusDriver.y = Math.min(Math.max(bonusDriver.y, 0), 200);
-    this.setState({
-      bonusDriver
-    })
-  }
   // submit bonus driver to server
   submitBonusDriver = async (event) => {
     // stops default form action
@@ -167,10 +125,18 @@ class App extends Component {
       alert("Bonus Driver coords must be between 0 and 200");
     }
   }
+
   // function to toggle the bonus driver
   toggleBonusDriver = () => {
     this.setState({
       showBonusDriver: !this.state.showBonusDriver
+    })
+  }
+
+  // function to update the state with a new bonusDriver
+  changeBonusDriver = (bonusDriver) => {
+    this.setState({
+      bonusDriver
     })
   }
 
