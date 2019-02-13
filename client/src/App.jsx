@@ -11,6 +11,7 @@ import DropDownButton from './components/DropDownButton'
 import TotalTripTime from './components/TotalTripTime'
 import RemainingTime from './components/RemainingTime'
 import BonusDriverForm from './components/BonusDriverForm'
+import LegProgressSlider from './components/LegProgressSlider'
 
 import legsParser from './helpers/legsParser';
 import stopsParser from './helpers/stopsParser';
@@ -92,7 +93,7 @@ class App extends Component {
           <div className="d-flex justify-content-center align-items-center text-center container">
             <div className="row w-25 mb-1">
               <div className="mx-auto align-self-center col-lg-12">
-                {this._renderLegProgressSlider()}
+                <LegProgressSlider legProgress={this.state.legProgress} onSliderChange={this.onSliderChange} onAfterChange={this.onAfterChange} />
               </div>
             </div>
           </div>
@@ -138,28 +139,6 @@ class App extends Component {
     this.setState({
       bonusDriver
     })
-  }
-
-  // function to render a slider for legProgress
-  _renderLegProgressSlider = () => {
-    return (
-      <div>
-        <strong>Leg Progress</strong>
-        <SliderWithTooltip className="w-100 mt-1"
-          tipFormatter={this.percentFormatter}
-          min={0}
-          max={100}
-          value={Number(this.state.legProgress)}
-          onChange={this.onSliderChange}
-          onAfterChange={this.onAfterChange}
-        />
-      </div>
-    )
-  }
-
-  // function to have a custom tooltip for slider
-  percentFormatter = (v) => {
-    return `${v}%`;
   }
 
   // function to handle slider changes, moves driver around as it changes
