@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = (db) => {
+module.exports = (db, aWss) => {
   /* GET driver location. */
   router.get('/', async (req, res, next) => {
     try {
@@ -37,6 +37,11 @@ module.exports = (db) => {
     try {
       let driver = await db.setDriver(req.body);
       res.send(driver);
+      // send Data via WebSocket
+      driver.type = "Driver";
+      aWss.clients.forEach(function (client) {
+        client.send(JSON.stringify(driver));
+      });
     } catch (err) {
       console.log(err);
       res.send(err);

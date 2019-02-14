@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = (db) => {
+module.exports = (db, aWss) => {
   /* GET bonus driver location. */
   router.get('/', async (req, res, next) => {
     try {
@@ -17,6 +17,11 @@ module.exports = (db) => {
     try {
       let bonusDriver = await db.setBonusDriver(req.body);
       res.send(bonusDriver);
+      // send Data via WebSocket
+      bonusDriver.type = "BonusDriver";
+      aWss.clients.forEach(function (client) {
+        client.send(JSON.stringify(bonusDriver));
+      });
     } catch (err) {
       console.log(err);
       res.send(err);

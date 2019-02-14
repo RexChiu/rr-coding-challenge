@@ -51,6 +51,29 @@ class App extends Component {
     } catch (err) {
       console.error(err);
     }
+
+    // Web Socket connection
+    const socket = new WebSocket(process.env.REACT_APP_WEBSOCKETURL);
+    // Web Socket open
+    socket.onopen = () => {
+      console.log("Connected to WS Server:", process.env.REACT_APP_WEBSOCKETURL);
+    }
+    // Web Socket message
+    socket.onmessage = evt => {
+      let data = JSON.parse(evt.data);
+      switch (data.type) {
+        case "Driver":
+          let legProgress = data.legProgress
+          let driver = this.calculateDriverInfo(data, this.state.stops);
+          this.setState({ driver, legProgress: legProgress })
+          break;
+        case "BonusDriver":
+          this.setState({ bonusDriver: data })
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   render() {

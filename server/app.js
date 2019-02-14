@@ -1,32 +1,40 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const app = express();
+const expressWs = require('express-ws')(app);
+const logger = require('morgan');
+
+const port = 5000;
 
 // placeholder in-memory db
 const db = require("./helpers/db");
 const DataHelper = require("./helpers/DataHelper")(db);
 
-var app = express();
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// WebSocket server/handler
+const aWss = expressWs.getWss('/');
 
 // routes handlers
-var legsRouter = require('./routes/legs')(DataHelper);
-var stopsRouter = require('./routes/stops')(DataHelper);
-var driverRouter = require('./routes/driver')(DataHelper);
-var bonusDriverRouter = require('./routes/bonusDriver')(DataHelper);
+const legsRouter = require('./routes/legs')(DataHelper);
+const stopsRouter = require('./routes/stops')(DataHelper);
+const driverRouter = require('./routes/driver')(DataHelper, aWss);
+const bonusDriverRouter = require('./routes/bonusDriver')(DataHelper, aWss);
 
 // routes
 app.use('/legs', legsRouter);
 app.use('/stops', stopsRouter);
 app.use('/driver', driverRouter);
 app.use('/bonusdriver', bonusDriverRouter);
+
+// Web Socket routes
+app.ws('/', (ws, req) => {
+  ws.on('message', msg => {
+    console.log(aWss.clients, msg);
+  })
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -44,4 +52,6 @@ app.use(function (err, req, res, next) {
   res.send('error');
 });
 
-module.exports = app;
+app.listen(port, function () {
+  console.log('Listening on port: ' + port + ", with websockets listener")
+})
